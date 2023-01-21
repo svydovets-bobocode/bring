@@ -91,6 +91,19 @@
                             <goal>check</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>checkstyle-check</id>
+                        <phase>verify</phase>
+                        <configuration>
+                            <sourceDirectories>${project.build.sourceDirectory}</sourceDirectories>
+                            <configLocation>checkstyle/checkstyle.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
                 </executions>
                 <configuration>
                     <configLocation>checkstyle/checkstyle.xml</configLocation>
