@@ -19,10 +19,12 @@ public class AnnotationApplicationContext extends AbstractApplicationContext imp
     getBeanFactory().createBeans(beanClasses);
   }
 
+  @Override
   public <T> T getBean(Class<T> beanType) {
     return getBeanFactory().getBean(beanType);
   }
 
+  @Override
   public <T> T getBean(Class<T> beanType, String beanName) {
     return getBeanFactory().getBean(beanType, beanName);
   }
