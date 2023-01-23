@@ -8,8 +8,9 @@
 
 ## Branching strategy
 
-In this repository we maintain **one key branch** [main](https://github.com/rovein/bring-svydovets). 
+In this repository we maintain **one key development branch** [dev](https://github.com/rovein/bring-svydovets/tree/dev). 
 In most cases it should be updated via the Pull Request.
+The ```main``` branch will contain only stable releases.
 
 
 ## Creating a Pull Request
