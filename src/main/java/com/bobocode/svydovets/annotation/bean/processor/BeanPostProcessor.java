@@ -1,7 +1,5 @@
 package com.bobocode.svydovets.annotation.bean.processor;
 
-import javax.annotation.Nullable;
-
 //todo: provide JavaDocs
 public interface BeanPostProcessor {
 

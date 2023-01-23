@@ -1,7 +1,6 @@
 package com.bobocode.svydovets.annotation.bean.factory;
 
 import java.util.Map;
-import java.util.Set;
 
 //todo: provide JavaDocs
 public interface BeanFactory {
