@@ -4,7 +4,6 @@ import com.bobocode.svydovets.beans.Car;
 import com.bobocode.svydovets.beans.CustomService;
 import com.bobocode.svydovets.beans.MessageService;
 import com.bobocode.svydovets.beans.PrinterService;
-import com.bobocode.svydovets.support.ApplicationContext;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MockitoExtension.class)
 class AnnotationApplicationContextTest {
 
-  private static ApplicationContext applicationContext;
+  private static AnnotationApplicationContext applicationContext;
 
   @BeforeAll
   static void setUp() {
