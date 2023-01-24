@@ -12,7 +12,7 @@ import java.util.Map;
 //todo: perform refactoring
 public class AutoSvydovetsBeanPostProcessor implements BeanPostProcessor {
 
-    private BeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
     public AutoSvydovetsBeanPostProcessor() {
         this.beanFactory = new AnnotationBeanFactory();

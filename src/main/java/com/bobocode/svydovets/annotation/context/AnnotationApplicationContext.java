@@ -45,7 +45,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         }
     }
 
-    public void registerBean(String beanName, Object bean) {
+    private void registerBean(String beanName, Object bean) {
         Object oldObject = rootContextMap.get(beanName);
         if (oldObject != null) {
             throw new IllegalStateException(
