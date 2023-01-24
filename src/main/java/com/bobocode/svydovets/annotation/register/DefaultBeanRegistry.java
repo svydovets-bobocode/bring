@@ -1,5 +1,8 @@
 package com.bobocode.svydovets.annotation.register;
 
+import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
+import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -29,20 +32,49 @@ public class DefaultBeanRegistry implements BeanRegistry {
     }
 
     //todo:remove it from parent interface and perform refactoring
+    /**
+     * Returns the bean instance by it`s unique name within the context.
+     *
+     * @param beanName bean ID by which it`s stored in the context
+     * @param beanType type the bean will be casted to; can be an interface or superclass
+     * @return an instance of the bean matching it`s name
+     * @throws NoSuchBeanException if no bean of the given name was found
+     */
     @Override
     public <T> T getSingleton(String beanName, Class<T> beanType) {
-        return beanType.cast(rootContextMap.get(beanName));
+        return rootContextMap.entrySet().stream()
+                .filter(beanEntry -> beanName.equals(beanEntry.getKey()))
+                .findAny()
+                .map(Map.Entry::getValue)
+                .map(beanType::cast)
+                .orElseThrow(NoSuchBeanException::new);
     }
 
+    /**
+     * Returns the bean instance that uniquely matches the given object type, if any.
+     *
+     * @param beanType type the bean must match; can be an interface or superclass
+     * @return an instance of the single bean matching the required type
+     * @throws NoSuchBeanException   if no bean of the given type was found
+     * @throws NoUniqueBeanException if more than one bean of the given type was found
+     */
     @Override
     public <T> T getSingleton(Class<T> beanType) {
-        Map<String, T> allBeans = getAllSingletons(beanType);
-        if (allBeans.size() > 1) {
-            throw new RuntimeException("not unique bean");
+        Map<String, T> matchingBeans = getAllSingletons(beanType);
+        if (matchingBeans.size() > 1) {
+            throw new NoUniqueBeanException();
         }
-        return allBeans.values().stream().findAny().orElseThrow();
+        return matchingBeans.values().stream()
+                .findAny()
+                .orElseThrow(NoSuchBeanException::new);
     }
 
+    /**
+     * Returns the map of all bean instances that match provided bean type.
+     *
+     * @param beanType type the beans must match; can be an interface or superclass
+     * @return a map where key is a bean ID and value is a bean itself
+     */
     @Override
     public <T> Map<String, T> getAllSingletons(Class<T> beanType) {
         return rootContextMap.entrySet().stream()

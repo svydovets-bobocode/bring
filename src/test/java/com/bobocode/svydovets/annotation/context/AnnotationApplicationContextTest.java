@@ -26,33 +26,28 @@ class AnnotationApplicationContextTest {
     applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets");
   }
 
-  //todo: refactor test names
   @Test
-  void test_whenGetBeanWithType_thenVerifyObjectBeanCreatedSuccessfully() {
+  void getSimpleBeanByTypeReturnsCorrectObject() {
     Car expected = new Car();
-
     Car bean = applicationContext.getBean(Car.class);
-
     assertBean(expected, bean);
   }
 
   @Test
-  void test_whenGetBeanWithTypeAndComponentName_thenVerifyObjectBeanCreatedSuccessfully() {
+  void getSimpleBeanByExplicitNameReturnsCorrectObject() {
     Car expected = new Car();
-
     Car bean = applicationContext.getBean("car_bean", Car.class);
-
     assertBean(expected, bean);
   }
 
-  private static void assertBean(Car expected, Car bean) {
+  private void assertBean(Car expected, Car bean) {
     assertNotNull(bean);
     assertEquals(bean.getClass(), expected.getClass());
     assertEquals(bean.getName(), expected.getName());
   }
 
   @Test
-  void test_getBeanByTypeReturnsCorrectBean() {
+  void getBeanByTypeReturnsCorrectBean() {
     MessageService messageService = applicationContext.getBean(MessageService.class);
     assertEquals("Hello", messageService.getMessage());
   }
@@ -79,8 +74,7 @@ class AnnotationApplicationContextTest {
     assertEquals("Hello", ((MessageService) messageService).getMessage());
   }
 
-//  @Test
-  //todo: fix it
+  @Test
   void getBeanByNonPresentName() {
     assertThrows(RuntimeException.class, () -> applicationContext.getBean("customService", CustomService.class));
   }
