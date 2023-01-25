@@ -1,5 +1,6 @@
 package com.bobocode.svydovets.annotation.bean.factory;
 
+import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 
@@ -7,6 +8,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * {@link BeanFactory} that is a part of {@link AnnotationApplicationContext} structure.
+ *
+ * @see BeanFactory
+ * @see AnnotationApplicationContext
+ */
 public class AnnotationBeanFactory implements BeanFactory {
 
     protected final Map<String, Object> rootContextMap = new ConcurrentHashMap<>();

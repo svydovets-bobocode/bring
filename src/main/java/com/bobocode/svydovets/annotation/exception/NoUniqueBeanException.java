@@ -1,5 +1,12 @@
 package com.bobocode.svydovets.annotation.exception;
 
+import com.bobocode.svydovets.annotation.annotations.Primary;
+import com.bobocode.svydovets.annotation.annotations.Qualifier;
+
+/**
+ * Exception is thrown in cases where there are several implementations of requested bean and
+ * neither {@link Qualifier} not {@link Primary} are provided in order to resolve issue.
+ */
 public class NoUniqueBeanException extends BeanException {
     private static final String NO_UNIQUE_BEAN_EXCEPTION_MESSAGE = """
             \tNo qualifying bean of type [%s]: expected single matching bean but found %d: [%s]

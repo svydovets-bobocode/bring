@@ -4,27 +4,44 @@ import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
-import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanPostProcessor;
-import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
+import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 
-//todo: provide JavaDocs
+/**
+ * Implementation of the {@link BeanFactory} and @{@link AnnotationRegistry} interfaces.
+ * Creates an application context based on the scanned classes, that are marked by
+ * {@link Component} annotation.
+ * <p>
+ * Creates a bean map, where key is bean ID, resolved by explicit {@link Component} value or
+ * uncapitalized bean class name. After map creation performs chained call of {@link BeanProcessor}.
+ *
+ * @see AutoSvydovetsBeanProcessor
+ * @see AnnotationRegistry
+ * @see BeanFactory
+ * @see BeanProcessor
+ */
 public class AnnotationApplicationContext extends AnnotationBeanFactory implements AnnotationRegistry {
 
-    private final BeanPostProcessor svydovetsBeanPostProcessor;
+    private List<BeanProcessor> beanProcessors;
 
-    //todo: investigate how to get root package (implicitly, without providing)
     public AnnotationApplicationContext(String... packages) {
-        this.svydovetsBeanPostProcessor = new AutoSvydovetsBeanPostProcessor(this);
+        initProcessors();
         Set<Class<?>> beanClasses = this.scan(packages);
-        beanClasses.forEach(this::register);
-        svydovetsBeanPostProcessor.processBeans(rootContextMap);
+        register(beanClasses.toArray(Class[]::new));
+        beanProcessors.forEach(beanPostProcessor -> beanPostProcessor.processBeans(rootContextMap));
+    }
+
+    private void initProcessors() {
+        this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(this));
     }
 
     @Override

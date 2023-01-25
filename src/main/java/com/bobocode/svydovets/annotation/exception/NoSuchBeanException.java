@@ -1,5 +1,8 @@
 package com.bobocode.svydovets.annotation.exception;
 
+/**
+ * Exception is thrown in cases where requested bean is not present in the application context.
+ */
 public class NoSuchBeanException extends BeanException {
     private static final String NO_SUCH_BEAN_EXCEPTION_MESSAGE = """
             \tNo qualifying bean of type [%s] found for dependency:\s
