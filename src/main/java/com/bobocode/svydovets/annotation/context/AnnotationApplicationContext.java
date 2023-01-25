@@ -19,7 +19,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     //todo: investigate how to get root package (implicitly, without providing)
     public AnnotationApplicationContext(String... packages) {
-        this.svydovetsBeanPostProcessor = new AutoSvydovetsBeanPostProcessor();
+        this.svydovetsBeanPostProcessor = new AutoSvydovetsBeanPostProcessor(this);
         Set<Class<?>> beanClasses = this.scan(packages);
         beanClasses.forEach(this::register);
         svydovetsBeanPostProcessor.processBeans(rootContextMap);
