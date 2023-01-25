@@ -1,7 +1,10 @@
 package com.bobocode.svydovets.annotation.context;
 
+import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.beans.BarFormatter;
 import com.bobocode.svydovets.beans.Car;
-import com.bobocode.svydovets.beans.CustomService;
+import com.bobocode.svydovets.beans.FooFormatter;
+import com.bobocode.svydovets.beans.FooService;
 import com.bobocode.svydovets.beans.MessageService;
 import com.bobocode.svydovets.beans.PrinterService;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,88 +12,55 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 @ExtendWith(MockitoExtension.class)
 class AnnotationApplicationContextTest {
 
-  private static AnnotationApplicationContext applicationContext;
+    private static AnnotationApplicationContext applicationContext;
 
-  @BeforeAll
-  static void setUp() {
-    applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
-  }
+    @BeforeAll
+    public static void setUp() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+    }
 
-  @Test
-  void getSimpleBeanByTypeReturnsCorrectObject() {
-    Car expected = new Car();
-    Car bean = applicationContext.getBean(Car.class);
-    assertBean(expected, bean);
-  }
+    @Test
+    public void scanPackage(){
+        var result = applicationContext.scan("com.bobocode.svydovets.beans");
+        assertNotNull(result);
+        assertEquals(6, result.size());
+        assertTrue(result.contains(Car.class));
+        assertTrue(result.contains(PrinterService.class));
+        assertTrue(result.contains(MessageService.class));
+        assertTrue(result.contains(BarFormatter.class));
+        assertTrue(result.contains(FooService.class));
+        assertTrue(result.contains(FooFormatter.class));
+    }
 
-  @Test
-  void getSimpleBeanByExplicitNameReturnsCorrectObject() {
-    Car expected = new Car();
-    Car bean = applicationContext.getBean("car_bean", Car.class);
-    assertBean(expected, bean);
-  }
+    @Test
+    public void registerBeanSuccessful() {
+        var result = applicationContext.getBean(Car.class);
+        assertNotNull(result);
+        assertEquals(Car.class, result.getClass());
+    }
 
-  private void assertBean(Car expected, Car bean) {
-    assertNotNull(bean);
-    assertEquals(bean.getClass(), expected.getClass());
-    assertEquals(bean.getName(), expected.getName());
-  }
+    @Test
+    public void registerAlreadyExistingBeanThrowsException() {
+        assertThrows(BeanException.class, () -> applicationContext.register(Car.class));
+    }
 
-  @Test
-  void getBeanByTypeReturnsCorrectBean() {
-    MessageService messageService = applicationContext.getBean(MessageService.class);
-    assertEquals("Hello", messageService.getMessage());
-  }
+    @Test
+    public void registerBeanWithoutDefaultConstructorThrowsException() {
+        assertThrows(BeanException.class, () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.unvalidbeans.defaultconstructor"));
+    }
 
-  @Test
-  void getBeanByTypeWhenNoBeanPresentInContext() {
-    assertThrows(RuntimeException.class, () -> applicationContext.getBean(List.class));
-  }
-
-  @Test
-  void getBeanByTypeWhenNoUniqueBeanPresentInContext() {
-    assertThrows(RuntimeException.class, () -> applicationContext.getBean(CustomService.class));
-  }
-
-  @Test
-  void getBeanByByNameReturnsCorrectBean() {
-    MessageService messageService = applicationContext.getBean("messageService", MessageService.class);
-    assertEquals("Hello", messageService.getMessage());
-  }
-
-  @Test
-  void getBeanByByNameAndSuperclassReturnsCorrectBean() {
-    CustomService messageService = applicationContext.getBean("messageService", CustomService.class);
-    assertEquals("Hello", ((MessageService) messageService).getMessage());
-  }
-
-  @Test
-  void getBeanByNonPresentName() {
-    assertThrows(RuntimeException.class, () -> applicationContext.getBean("customService", CustomService.class));
-  }
-
-  @Test
-  void getAllBeansReturnsCorrectMap() {
-    Map<String, CustomService> customServices = applicationContext.getAllBeans(CustomService.class);
-
-    assertEquals(2, customServices.size());
-
-    assertTrue(customServices.containsKey("messageService"));
-    assertTrue(customServices.containsKey("printerService"));
-
-    assertTrue(customServices.values().stream()
-            .anyMatch(bean -> bean.getClass().isAssignableFrom(MessageService.class)));
-    assertTrue(customServices.values().stream()
-            .anyMatch(bean -> bean.getClass().isAssignableFrom(PrinterService.class)));
-  }
+    @Test
+    public void registerBeanFromAbstractClassThrowsException() {
+        assertThrows(BeanException.class, () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.unvalidbeans.abstractbean"));
+    }
 
 }
