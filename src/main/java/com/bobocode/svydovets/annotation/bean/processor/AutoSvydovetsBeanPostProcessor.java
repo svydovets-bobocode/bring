@@ -2,27 +2,30 @@ package com.bobocode.svydovets.annotation.bean.processor;
 
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
-import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
-
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
-//todo: provide JavaDocs
-//todo: perform refactoring
+/**
+ * Implementation of the {@link BeanPostProcessor} interface. Executes processing of
+ * {@link AutoSvydovets} marked fields in beans. Such fields will be injected as a
+ * dependency, retrieved from the context.
+ * <p>
+ * If no unique bean is present - processor will try to inject bean based on
+ * {@link Qualifier} value.
+ *
+ * @see BeanPostProcessor
+ * @see AutoSvydovets
+ * @see Qualifier
+ */
 public class AutoSvydovetsBeanPostProcessor implements BeanPostProcessor {
 
     private final BeanFactory beanFactory;
 
-    public AutoSvydovetsBeanPostProcessor() {
-        this.beanFactory = new AnnotationBeanFactory();
-    }
-
     public AutoSvydovetsBeanPostProcessor(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
-
 
     @Override
     public void processBeans(Map<String, Object> rootContext) {
