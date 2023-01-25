@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class AnnotationBeanFactory implements BeanFactory {
 
-    protected static final Map<String, Object> rootContextMap = new ConcurrentHashMap<>();
+    protected final Map<String, Object> rootContextMap = new ConcurrentHashMap<>();
 
     @Override
     public <T> T getBean(Class<T> beanType) {

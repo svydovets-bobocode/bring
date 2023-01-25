@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * <p>If a qualifier value is not specified, the default value is used.
  *
  */
-@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Qualifier {
     String value() default "";
