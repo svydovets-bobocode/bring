@@ -15,11 +15,12 @@ public class AnnotationBeanFactory implements BeanFactory {
     public <T> T getBean(Class<T> beanType) {
         Map<String, T> matchingBeans = getAllBeans(beanType);
         if (matchingBeans.size() > 1) {
-            throw new NoUniqueBeanException();
+            String foundBeans = String.join(", ", matchingBeans.keySet());
+            throw new NoUniqueBeanException(beanType.getName(), matchingBeans.size(), foundBeans);
         }
         return matchingBeans.values().stream()
                 .findAny()
-                .orElseThrow(NoSuchBeanException::new);
+                .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
     }
 
     @Override
@@ -29,7 +30,7 @@ public class AnnotationBeanFactory implements BeanFactory {
                 .findAny()
                 .map(Map.Entry::getValue)
                 .map(beanType::cast)
-                .orElseThrow(NoSuchBeanException::new);
+                .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
     }
 
     @Override

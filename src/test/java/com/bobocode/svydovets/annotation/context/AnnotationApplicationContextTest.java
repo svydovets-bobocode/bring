@@ -22,7 +22,7 @@ class AnnotationApplicationContextTest {
 
   @BeforeAll
   static void setUp() {
-    applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets");
+    applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
   }
 
   @Test

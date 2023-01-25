@@ -3,6 +3,7 @@ package com.bobocode.svydovets.annotation.bean.processor;
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
+import com.bobocode.svydovets.annotation.exception.BeanException;
 
 
 import java.lang.reflect.Field;
@@ -38,7 +39,7 @@ public class AutoSvydovetsBeanPostProcessor implements BeanPostProcessor {
             field.setAccessible(true);
             field.set(beanObject, dependency);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new BeanException(e.getMessage(), e);
         }
     }
 
