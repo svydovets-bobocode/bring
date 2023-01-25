@@ -9,25 +9,24 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * Implementation of the {@link BeanPostProcessor} interface. Executes processing of
+ * Implementation of the {@link BeanProcessor} interface. Executes processing of
  * {@link AutoSvydovets} marked fields in beans. Such fields will be injected as a
  * dependency, retrieved from the context.
  * <p>
  * If no unique bean is present - processor will try to inject bean based on
  * {@link Qualifier} value.
  *
- * @see BeanPostProcessor
+ * @see BeanProcessor
  * @see AutoSvydovets
  * @see Qualifier
  */
-public class AutoSvydovetsBeanPostProcessor implements BeanPostProcessor {
+public class AutoSvydovetsBeanProcessor implements BeanProcessor {
 
     private final BeanFactory beanFactory;
 
-    public AutoSvydovetsBeanPostProcessor(BeanFactory beanFactory) {
+    public AutoSvydovetsBeanProcessor(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
-
 
     @Override
     public void processBeans(Map<String, Object> rootContext) {

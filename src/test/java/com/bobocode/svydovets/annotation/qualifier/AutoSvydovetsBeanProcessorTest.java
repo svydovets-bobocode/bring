@@ -12,19 +12,19 @@ import java.util.Map;
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
-import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanPostProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class AutoSvydovetsBeanPostProcessorTest {
+public class AutoSvydovetsBeanProcessorTest {
 
     @Mock
     private BeanFactory mockBeanFactory;
 
-    private AutoSvydovetsBeanPostProcessor postProcessor;
+    private AutoSvydovetsBeanProcessor postProcessor;
     private Map<String, Object> rootContext;
 
     @SneakyThrows
@@ -33,7 +33,7 @@ public class AutoSvydovetsBeanPostProcessorTest {
         // Initialize the mock
         MockitoAnnotations.openMocks(this).close();
 
-        postProcessor = new AutoSvydovetsBeanPostProcessor(mockBeanFactory);
+        postProcessor = new AutoSvydovetsBeanProcessor(mockBeanFactory);
         rootContext = new HashMap<>();
     }
 

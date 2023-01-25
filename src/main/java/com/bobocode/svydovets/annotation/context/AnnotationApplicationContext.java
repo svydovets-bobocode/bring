@@ -9,8 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
-import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanPostProcessor;
-import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import org.apache.commons.lang3.StringUtils;
@@ -22,16 +22,16 @@ import org.reflections.Reflections;
  * {@link Component} annotation.
  * <p>
  * Creates a bean map, where key is bean ID, resolved by explicit {@link Component} value or
- * uncapitalized bean class name. After map creation performs chained call of {@link BeanPostProcessor}.
+ * uncapitalized bean class name. After map creation performs chained call of {@link BeanProcessor}.
  *
- * @see AutoSvydovetsBeanPostProcessor
+ * @see AutoSvydovetsBeanProcessor
  * @see AnnotationRegistry
  * @see BeanFactory
- * @see BeanPostProcessor
+ * @see BeanProcessor
  */
 public class AnnotationApplicationContext extends AnnotationBeanFactory implements AnnotationRegistry {
 
-    private List<BeanPostProcessor> beanPostProcessors;
+    private List<BeanProcessor> beanPostProcessors;
 
     public AnnotationApplicationContext(String... packages) {
         initPostProcessors();
@@ -41,8 +41,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void initPostProcessors() {
-        BeanFactory beanFactory = new AnnotationBeanFactory();
-        this.beanPostProcessors = List.of(new AutoSvydovetsBeanPostProcessor(beanFactory));
+        this.beanPostProcessors = List.of(new AutoSvydovetsBeanProcessor(this));
     }
 
     @Override
