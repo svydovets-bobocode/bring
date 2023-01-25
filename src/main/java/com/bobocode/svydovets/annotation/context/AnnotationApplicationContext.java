@@ -34,13 +34,13 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     private List<BeanProcessor> beanProcessors;
 
     public AnnotationApplicationContext(String... packages) {
-        initPostProcessors();
+        initProcessors();
         Set<Class<?>> beanClasses = this.scan(packages);
         register(beanClasses.toArray(Class[]::new));
         beanProcessors.forEach(beanPostProcessor -> beanPostProcessor.processBeans(rootContextMap));
     }
 
-    private void initPostProcessors() {
+    private void initProcessors() {
         this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(this));
     }
 
