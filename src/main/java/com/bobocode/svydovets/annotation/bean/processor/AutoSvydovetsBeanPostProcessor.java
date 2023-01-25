@@ -1,8 +1,8 @@
 package com.bobocode.svydovets.annotation.bean.processor;
 
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
+import com.bobocode.svydovets.annotation.exception.BeanException;
 
 
 import java.lang.reflect.Field;
@@ -14,8 +14,8 @@ public class AutoSvydovetsBeanPostProcessor implements BeanPostProcessor {
 
     private final BeanFactory beanFactory;
 
-    public AutoSvydovetsBeanPostProcessor() {
-        this.beanFactory = new AnnotationBeanFactory();
+    public AutoSvydovetsBeanPostProcessor(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AutoSvydovetsBeanPostProcessor implements BeanPostProcessor {
             field.setAccessible(true);
             field.set(beanObject, dependency);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new BeanException(e.getMessage(), e);
         }
     }
 
