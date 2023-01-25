@@ -31,17 +31,17 @@ import org.reflections.Reflections;
  */
 public class AnnotationApplicationContext extends AnnotationBeanFactory implements AnnotationRegistry {
 
-    private List<BeanProcessor> beanPostProcessors;
+    private List<BeanProcessor> beanProcessors;
 
     public AnnotationApplicationContext(String... packages) {
         initPostProcessors();
         Set<Class<?>> beanClasses = this.scan(packages);
         register(beanClasses.toArray(Class[]::new));
-        beanPostProcessors.forEach(beanPostProcessor -> beanPostProcessor.processBeans(rootContextMap));
+        beanProcessors.forEach(beanPostProcessor -> beanPostProcessor.processBeans(rootContextMap));
     }
 
     private void initPostProcessors() {
-        this.beanPostProcessors = List.of(new AutoSvydovetsBeanProcessor(this));
+        this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(this));
     }
 
     @Override
