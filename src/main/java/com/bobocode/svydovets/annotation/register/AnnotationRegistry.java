@@ -1,4 +1,4 @@
-package com.bobocode.svydovets.annotation.context;
+package com.bobocode.svydovets.annotation.register;
 
 import java.util.Set;
 
@@ -6,4 +6,6 @@ import java.util.Set;
 public interface AnnotationRegistry {
 
     Set<Class<?>> scan(String... packages);
+
+    void register(Class<?>... componentClasses);
 }

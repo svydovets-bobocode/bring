@@ -1,9 +1,11 @@
 package com.bobocode.svydovets.annotation.bean.processor;
 
+import java.util.Map;
+
 //todo: provide JavaDocs
 public interface BeanPostProcessor {
 
-    void process();
+    void processBeans(Map<String, Object> rootContext);
 
     //todo: think about before/after initialization
 //  public interface BeanPostProcessor {
