@@ -15,7 +15,8 @@ public class AnnotationBeanFactory implements BeanFactory {
     public <T> T getBean(Class<T> beanType) {
         Map<String, T> matchingBeans = getAllBeans(beanType);
         if (matchingBeans.size() > 1) {
-            throw new NoUniqueBeanException(beanType.getName(), matchingBeans.size(), String.join(", ", matchingBeans.keySet()));
+            String foundBeans = String.join(", ", matchingBeans.keySet());
+            throw new NoUniqueBeanException(beanType.getName(), matchingBeans.size(), foundBeans);
         }
         return matchingBeans.values().stream()
                 .findAny()
