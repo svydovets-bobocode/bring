@@ -5,11 +5,13 @@ import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanPostProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -52,23 +54,36 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     @Override
     public void register(Class<?>... componentClasses) {
         for (Class<?> beanType : componentClasses) {
-            try {
-                Constructor<?> constructor = beanType.getConstructor();
-                Object beanObject = constructor.newInstance();
-                String beanName = resolveBeanName(beanType);
-                registerBean(beanName, beanObject);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            Constructor<?> constructor = getConstructor(beanType);
+            Object bean = createInstance(constructor);
+            String beanName = resolveBeanName(beanType);
+            registerBean(beanName, bean);
+        }
+    }
+
+    private Constructor<?> getConstructor(Class<?> beanType) {
+        try {
+            return beanType.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new BeanException("No default constructor for " + beanType.getName(), e);
+        }
+    }
+
+    private Object createInstance(Constructor<?> constructor) {
+        try {
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new BeanException("Can't create instance", e);
         }
     }
 
     private void registerBean(String beanName, Object bean) {
         Object oldObject = rootContextMap.get(beanName);
         if (oldObject != null) {
-            throw new IllegalStateException(
-                    "Could not register object [" + oldObject + "] under bean name '" + beanName
-                            + "': there is already object [" + oldObject + "] bound");
+            throw new BeanException(String.format(
+                    "Could not register object [%s] under bean name '%s': there is already object [%s] bound",
+                    oldObject, beanName, oldObject
+            ));
         }
         rootContextMap.put(beanName, bean);
     }

@@ -16,17 +16,18 @@ import java.util.stream.Collectors;
  */
 public class AnnotationBeanFactory implements BeanFactory {
 
-    protected static final Map<String, Object> rootContextMap = new ConcurrentHashMap<>();
+    protected final Map<String, Object> rootContextMap = new ConcurrentHashMap<>();
 
     @Override
     public <T> T getBean(Class<T> beanType) {
         Map<String, T> matchingBeans = getAllBeans(beanType);
         if (matchingBeans.size() > 1) {
-            throw new NoUniqueBeanException();
+            String foundBeans = String.join(", ", matchingBeans.keySet());
+            throw new NoUniqueBeanException(beanType.getName(), matchingBeans.size(), foundBeans);
         }
         return matchingBeans.values().stream()
                 .findAny()
-                .orElseThrow(NoSuchBeanException::new);
+                .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
     }
 
     @Override
@@ -36,7 +37,7 @@ public class AnnotationBeanFactory implements BeanFactory {
                 .findAny()
                 .map(Map.Entry::getValue)
                 .map(beanType::cast)
-                .orElseThrow(NoSuchBeanException::new);
+                .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
     }
 
     @Override
