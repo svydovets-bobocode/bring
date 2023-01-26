@@ -55,12 +55,12 @@ class AnnotationApplicationContextTest {
 
     @Test
     public void registerBeanWithoutDefaultConstructorThrowsException() {
-        assertThrows(BeanException.class, () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.unvalidbeans.defaultconstructor"));
+        assertThrows(BeanException.class, () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.invalidbeans.defaultconstructor"));
     }
 
     @Test
     public void registerBeanFromAbstractClassThrowsException() {
-        assertThrows(BeanException.class, () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.unvalidbeans.abstractbean"));
+        assertThrows(BeanException.class, () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.invalidbeans.abstractbean"));
     }
 
 }
