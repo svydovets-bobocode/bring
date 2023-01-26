@@ -1,8 +1,10 @@
 package com.bobocode.svydovets.annotation.context;
 
 import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Primary;
 import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +15,7 @@ import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcess
 import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
+import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 
@@ -84,7 +87,28 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
                     oldObject, beanName, oldObject
             ));
         }
+        fillBeanDefinition(beanName, bean.getClass());
         rootContextMap.put(beanName, bean);
+    }
+
+    private void fillBeanDefinition(String beanName, Class<?> beanType) {
+        var annotations = beanType.getAnnotations();
+        boolean isPrimary = false;
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().equals(Primary.class)) {
+                isPrimary = true;
+            }
+        }
+
+        var beanDefinition = BeanDefinition.builder()
+                .beanClass(beanType)
+                .beanName(beanName)
+                .isPrimary(isPrimary)
+//                .qualifier()
+//                .scope()
+//                .isLazy()
+                .build();
+        beanDefinitionMap.put(beanName, beanDefinition);
     }
 
     private String resolveBeanName(Class<?> type) {

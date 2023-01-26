@@ -3,6 +3,7 @@ package com.bobocode.svydovets.autowiring;
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
+import com.bobocode.svydovets.autowiring.success.AnnotationService;
 import com.bobocode.svydovets.autowiring.success.SuccessCustomService;
 import com.bobocode.svydovets.autowiring.success.SuccessMessageServiceImpl;
 import com.bobocode.svydovets.autowiring.success.SuccessPrinterServiceImpl;
@@ -101,6 +102,15 @@ class AnnotationApplicationContextTest {
                     .anyMatch(bean -> bean.getClass().isAssignableFrom(SuccessMessageServiceImpl.class)));
             assertTrue(customServices.values().stream()
                     .anyMatch(bean -> bean.getClass().isAssignableFrom(SuccessPrinterServiceImpl.class)));
+        }
+
+        @Test
+        @Order(9)
+        @DisplayName("Successful retrieve bean with @Primary annotation")
+        void getBeanWithPrimaryAnnotation() {
+            var primaryBean = applicationContext.getBean(AnnotationService.class);
+            assertNotNull(primaryBean);
+            assertEquals("PrimaryAnnotationService", primaryBean.getServiceName());
         }
     }
 
