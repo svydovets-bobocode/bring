@@ -3,6 +3,7 @@ package com.bobocode.svydovets.autowiring;
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
+import com.bobocode.svydovets.autowiring.nouniquebean.primaryduplicate.InvalidAnnotationService;
 import com.bobocode.svydovets.autowiring.success.AnnotationService;
 import com.bobocode.svydovets.autowiring.success.SuccessCustomService;
 import com.bobocode.svydovets.autowiring.success.SuccessMessageServiceImpl;
@@ -106,11 +107,18 @@ class AnnotationApplicationContextTest {
 
         @Test
         @Order(9)
-        @DisplayName("Successful retrieve bean with @Primary annotation")
+        @DisplayName("Successful retrive bean with @Primary annotation")
         void getBeanWithPrimaryAnnotation() {
             var primaryBean = applicationContext.getBean(AnnotationService.class);
             assertNotNull(primaryBean);
             assertEquals("PrimaryAnnotationService", primaryBean.getServiceName());
+        }
+        @Test
+        @Order(9)
+        @DisplayName("NoUniqueBeanException is thrown when Primary annotation is present on more then one candidate ")
+        void getBeanWithDuplicatedPrimaryAnnotation() {
+            applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.nouniquebean.primaryduplicate");
+            assertThrows(NoUniqueBeanException.class, () -> applicationContext.getBean(InvalidAnnotationService.class));
         }
     }
 

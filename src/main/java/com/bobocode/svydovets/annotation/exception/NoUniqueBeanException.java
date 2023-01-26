@@ -13,7 +13,15 @@ public class NoUniqueBeanException extends BeanException {
             \tTo resolve the issue: use @Qualifier("...")
             """;
 
+    private static final String MORE_THAN_ONE_PRIMARY_FOUND = """
+            \tNo qualifying bean of type [%s]: more than one 'primary' bean found among candidates: %s
+            """;
+
     public NoUniqueBeanException(String beanType, int found, String foundBeans) {
         super(String.format(NO_UNIQUE_BEAN_EXCEPTION_MESSAGE, beanType, found, foundBeans));
+    }
+
+    public NoUniqueBeanException(String beanType, String foundBeans) {
+        super(String.format(MORE_THAN_ONE_PRIMARY_FOUND, beanType, foundBeans));
     }
 }

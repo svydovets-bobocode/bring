@@ -24,7 +24,7 @@ public class AnnotationBeanFactory implements BeanFactory {
     public <T> T getBean(Class<T> beanType) {
         Map<String, T> matchingBeans = getAllBeans(beanType);
         if (matchingBeans.size() > 1) {
-            var bean = checkForPrimary(matchingBeans);
+            var bean = checkForPrimary(matchingBeans, beanType);
 
             if (bean != null) {
                 return bean;
@@ -38,11 +38,19 @@ public class AnnotationBeanFactory implements BeanFactory {
                 .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
     }
 
-    private <T> T checkForPrimary(Map<String, T> matchingBeans) {
+    private <T> T checkForPrimary(Map<String, T> matchingBeans, Class<T> beanType) {
         T result = null;
+        int primaryAnnotationCount = 0;
         for (String beanName : matchingBeans.keySet()) {
             var beanDefinition = beanDefinitionMap.get(beanName);
             if (beanDefinition.isPrimary()) {
+                primaryAnnotationCount++;
+                if (primaryAnnotationCount > 1) {
+                    throw new NoUniqueBeanException(
+                            beanType.getName(),
+                            matchingBeans.keySet().toString()
+                    );
+                }
                 result = matchingBeans.get(beanName);
             }
         }
