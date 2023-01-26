@@ -6,7 +6,6 @@ import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -26,9 +25,11 @@ public class AnnotationBeanFactory implements BeanFactory {
         Map<String, T> matchingBeans = getAllBeans(beanType);
         if (matchingBeans.size() > 1) {
             var bean = checkForPrimary(matchingBeans);
-            if (Objects.nonNull(bean)) {
+
+            if (bean != null) {
                 return bean;
             }
+
             String foundBeans = String.join(", ", matchingBeans.keySet());
             throw new NoUniqueBeanException(beanType.getName(), matchingBeans.size(), foundBeans);
         }
