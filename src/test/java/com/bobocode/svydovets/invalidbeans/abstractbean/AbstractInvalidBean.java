@@ -1,4 +1,4 @@
-package com.bobocode.svydovets.unvalidbeans.abstractbean;
+package com.bobocode.svydovets.invalidbeans.abstractbean;
 
 import com.bobocode.svydovets.annotation.annotations.Component;
 

@@ -1,4 +1,4 @@
-package com.bobocode.svydovets.unvalidbeans.defaultconstructor;
+package com.bobocode.svydovets.invalidbeans.defaultconstructor;
 
 import com.bobocode.svydovets.annotation.annotations.Component;
 
