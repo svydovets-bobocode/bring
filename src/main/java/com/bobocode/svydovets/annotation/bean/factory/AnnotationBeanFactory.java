@@ -37,7 +37,7 @@ public class AnnotationBeanFactory implements BeanFactory {
                 .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
     }
 
-    private <T> T checkForPrimary(Map<String,T> matchingBeans) {
+    private <T> T checkForPrimary(Map<String, T> matchingBeans) {
         T result = null;
         for (String beanName : matchingBeans.keySet()) {
             var beanDefinition = beanDefinitionMap.get(beanName);
