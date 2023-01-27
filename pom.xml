@@ -165,6 +165,7 @@
                                         <exclude>com.bobocode.svydovets.annotation.exception.**</exclude>
                                         <exclude>com.bobocode.svydovets.annotation.bean.factory.**</exclude>
                                         <exclude>com.bobocode.svydovets.annotation.register.**</exclude>
+                                        <exclude>com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor</exclude>
                                     </excludes>
                                 </rule>
                             </rules>

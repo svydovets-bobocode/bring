@@ -81,7 +81,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         if (oldObject != null) {
             throw new BeanException(String.format(
                     "Could not register object [%s] under bean name '%s': there is already object [%s] bound",
-                    oldObject, beanName, oldObject
+                    bean, beanName, oldObject
             ));
         }
         rootContextMap.put(beanName, bean);
