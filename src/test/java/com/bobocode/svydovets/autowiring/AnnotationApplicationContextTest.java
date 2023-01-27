@@ -114,7 +114,7 @@ class AnnotationApplicationContextTest {
             assertEquals("PrimaryAnnotationService", primaryBean.getServiceName());
         }
         @Test
-        @Order(9)
+        @Order(10)
         @DisplayName("NoUniqueBeanException is thrown when Primary annotation is present on more then one candidate ")
         void getBeanWithDuplicatedPrimaryAnnotation() {
             applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.nouniquebean.primaryduplicate");
