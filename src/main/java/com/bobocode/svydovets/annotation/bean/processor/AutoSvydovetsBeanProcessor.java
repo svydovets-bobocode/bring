@@ -6,6 +6,10 @@ import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +56,9 @@ public class AutoSvydovetsBeanProcessor implements BeanProcessor {
     }
 
     private Object getDependencyForField(Field field) {
+        if (List.class.isAssignableFrom(field.getType())) {
+            return getBeansCollection(field);
+        }
         if (field.isAnnotationPresent(Qualifier.class)) {
             String qualifierValue = field.getAnnotation(Qualifier.class).value();
             return beanFactory.getBean(qualifierValue, field.getType());
@@ -60,4 +67,15 @@ public class AutoSvydovetsBeanProcessor implements BeanProcessor {
         }
     }
 
+    private List<?> getBeansCollection(Field field) {
+        List<?> beansByType = Collections.emptyList();
+        Type genericType = field.getGenericType();
+        if (genericType instanceof ParameterizedType parameterizedType) {
+            Type[] types = parameterizedType.getActualTypeArguments();
+            if (types.length == 1 && types[0] instanceof Class<?> elementType) {
+                beansByType = beanFactory.getBeansByType(elementType);
+            }
+        }
+        return beansByType;
+    }
 }
