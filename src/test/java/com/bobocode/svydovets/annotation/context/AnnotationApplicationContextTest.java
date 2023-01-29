@@ -60,10 +60,18 @@ class AnnotationApplicationContextTest {
 
     @Test
     public void shouldThrowIfPackagesArgumentIsNull() {
-        String packageToScan = null;
+        String[] packages = null;
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
-                () -> applicationContext.scan(packageToScan));
+                () -> applicationContext.scan(packages));
         assertEquals("Packages to scan argument can not be null", thrown.getMessage());
+    }
+
+    @Test
+    public void shouldThrowIfItemInPackagesArgumentIsNull() {
+        String packageName = null;
+        UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
+                () -> applicationContext.scan(packageName));
+        assertEquals("Package to scan argument can not be null", thrown.getMessage());
     }
 
     @Test

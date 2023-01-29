@@ -18,7 +18,8 @@ public interface AnnotationRegistry {
      *
      * @param packages package names to scan
      * @return set of classes (empty if no classes were found or invalid package name)
-     * @throws UnprocessableScanningBeanLocationException if {@code packages} is null or any of {@code packages} items is empty
+     * @throws UnprocessableScanningBeanLocationException if {@code packages} is null
+     * or any of {@code packages} items is null or empty
      */
     Set<Class<?>> scan(String... packages);
 

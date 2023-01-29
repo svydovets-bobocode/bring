@@ -8,6 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.Set;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
@@ -61,7 +62,10 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         if (packages == null) {
             throw new UnprocessableScanningBeanLocationException("Packages to scan argument can not be null");
         }
-        if(Arrays.stream(packages).anyMatch(String::isEmpty)) {
+        if (Arrays.stream(packages).anyMatch(Objects::isNull)) {
+            throw new UnprocessableScanningBeanLocationException("Package to scan argument can not be null");
+        }
+        if (Arrays.stream(packages).anyMatch(String::isEmpty)) {
             throw new UnprocessableScanningBeanLocationException("Package to scan can not be empty");
         }
     }
