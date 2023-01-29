@@ -1,6 +1,7 @@
 package com.bobocode.svydovets.annotation.register;
 
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
 
 import java.util.Set;
 
@@ -17,6 +18,7 @@ public interface AnnotationRegistry {
      *
      * @param packages package names to scan
      * @return set of classes (empty if no classes were found or invalid package name)
+     * @throws UnprocessableScanningBeanLocationException if {@code packages} is null or any of {@code packages} items is empty
      */
     Set<Class<?>> scan(String... packages);
 

@@ -14,10 +14,13 @@ import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
 import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
+
+import java.util.Arrays;
 
 /**
  * Implementation of the {@link BeanFactory} and @{@link AnnotationRegistry} interfaces.
@@ -49,8 +52,18 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     @Override
     public Set<Class<?>> scan(String... packages) {
+        validateScanArgument(packages);
         Reflections reflections = new Reflections((Object) packages);
         return reflections.getTypesAnnotatedWith(Component.class);
+    }
+
+    void validateScanArgument(String... packages) {
+        if (packages == null) {
+            throw new UnprocessableScanningBeanLocationException("Packages to scan argument can not be null");
+        }
+        if(Arrays.stream(packages).anyMatch(String::isEmpty)) {
+            throw new UnprocessableScanningBeanLocationException("Package to scan can not be empty");
+        }
     }
 
     @Override
