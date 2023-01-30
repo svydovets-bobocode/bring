@@ -29,7 +29,6 @@ public class AutoSvydovetsBeanProcessor implements BeanProcessor {
         this.injectors = injectors;
     }
 
-
     @Override
     public void processBeans(Map<String, Object> rootContext) {
         rootContext.values()
