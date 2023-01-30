@@ -5,6 +5,7 @@ import com.bobocode.svydovets.annotation.annotations.Primary;
 import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,10 @@ import java.util.Set;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.injector.ConstructorInjector;
+import com.bobocode.svydovets.annotation.bean.processor.injector.FieldInjector;
+import com.bobocode.svydovets.annotation.bean.processor.injector.Injector;
+import com.bobocode.svydovets.annotation.bean.processor.injector.SetterInjector;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
@@ -38,6 +43,7 @@ import java.util.Arrays;
 public class AnnotationApplicationContext extends AnnotationBeanFactory implements AnnotationRegistry {
 
     private List<BeanProcessor> beanProcessors;
+    private List<Injector<? extends AccessibleObject>> injectors;
 
     public AnnotationApplicationContext(String... packages) {
         initProcessors();
@@ -47,7 +53,14 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void initProcessors() {
-        this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(this));
+        initInjectors();
+        this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(injectors));
+    }
+
+    private void initInjectors() {
+       injectors = List.of(new SetterInjector(this),
+               new FieldInjector(this),
+               new ConstructorInjector(this));
     }
 
     @Override
@@ -97,7 +110,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         if (oldObject != null) {
             throw new BeanException(String.format(
                     "Could not register object [%s] under bean name '%s': there is already object [%s] bound",
-                    oldObject, beanName, oldObject
+                    bean, beanName, oldObject
             ));
         }
         fillBeanDefinition(beanName, bean.getClass());
