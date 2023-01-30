@@ -5,6 +5,7 @@ import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -72,5 +73,13 @@ public class AnnotationBeanFactory implements BeanFactory {
         return rootContextMap.entrySet().stream()
                 .filter(entry -> beanType.isAssignableFrom(entry.getValue().getClass()))
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> beanType.cast(entry.getValue())));
+    }
+
+    @Override
+    public <T> List<T> getBeansByType(Class<T> beanType) {
+        return rootContextMap.values().stream()
+                .filter(bean -> beanType.isAssignableFrom(bean.getClass()))
+                .map(beanType.asSubclass(beanType)::cast)
+                .collect(Collectors.toList());
     }
 }

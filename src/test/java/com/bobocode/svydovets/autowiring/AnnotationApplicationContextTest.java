@@ -3,6 +3,7 @@ package com.bobocode.svydovets.autowiring;
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
+import com.bobocode.svydovets.autowiring.collection.SuccessCollectionService;
 import com.bobocode.svydovets.autowiring.nouniquebean.primaryduplicate.InvalidAnnotationService;
 import com.bobocode.svydovets.autowiring.success.AnnotationService;
 import com.bobocode.svydovets.autowiring.success.SuccessCustomService;
@@ -158,6 +159,15 @@ class AnnotationApplicationContextTest {
 
             assertThat(noUniqueBeanException.getMessage(), containsString("expected single matching bean but found"));
             assertThat(noUniqueBeanException.getMessage(), containsString("To resolve the issue: use @Qualifier(\"...\")"));
+        }
+
+        @Test
+        @Order(4)
+        @DisplayName("Field injection with list of beans is successfully autowired")
+        void autowiringListToFieldSetCorrectly() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.collection");
+            SuccessCollectionService bean = applicationContext.getBean(SuccessCollectionService.class);
+            assertEquals(1, bean.printBeanSize());
         }
     }
 

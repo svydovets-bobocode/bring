@@ -18,9 +18,9 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
     public void injectDependency(Object beanObject) {
         getAccessibleObjects(beanObject)
                 .forEach((key, value) -> {
-            Object dependency = getDependency(value, key);
-            injectDependency(value, beanObject, dependency);
-        });
+                    Object dependency = getDependency(value, key);
+                    injectDependency(value, beanObject, dependency);
+                });
     }
 
     protected Object getDependency(T accessibleObject, Class<?> injectType) {
@@ -35,6 +35,7 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
     protected boolean isAutoSvydovetsPresent(AccessibleObject accessibleObject) {
         return accessibleObject.isAnnotationPresent(AutoSvydovets.class);
     }
+
     protected abstract Map<Class<?>, T> getAccessibleObjects(Object beanObject);
 
     protected abstract void injectDependency(T accessibleObject, Object beanObject, Object dependencyParams);

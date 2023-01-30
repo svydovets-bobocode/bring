@@ -4,7 +4,10 @@ import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,5 +32,19 @@ public class FieldInjector extends AbstractInjector<Field> {
         } catch (IllegalAccessException e) {
             throw new BeanException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    protected Object getDependency(Field accessibleObject, Class<?> injectType) {
+        if (Collection.class.isAssignableFrom(injectType)) {
+            Type genericType = accessibleObject.getGenericType();
+            if (genericType instanceof ParameterizedType parameterizedType) {
+                Type[] types = parameterizedType.getActualTypeArguments();
+                if (types.length == 1 && types[0] instanceof Class<?> elementType) {
+                    return beanFactory.getBeansByType(elementType);
+                }
+            }
+        }
+        return super.getDependency(accessibleObject, injectType);
     }
 }
