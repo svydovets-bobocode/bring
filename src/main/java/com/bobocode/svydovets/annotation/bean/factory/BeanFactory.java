@@ -4,6 +4,7 @@ import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,4 +46,12 @@ public interface BeanFactory {
      */
     <T> Map<String, T> getAllBeans(Class<T> beanType);
 
+
+    /**
+     * Returns the list of all bean instances that match provided bean type.
+     *
+     * @param beanType type the beans must match; can be an interface or superclass
+     * @return a list of beans themselves
+     */
+    <T> List<T> getBeansByType(Class<T> beanType);
 }
