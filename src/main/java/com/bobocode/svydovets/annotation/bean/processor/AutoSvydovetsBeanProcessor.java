@@ -2,13 +2,9 @@ package com.bobocode.svydovets.annotation.bean.processor;
 
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
-import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
-import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.annotation.bean.processor.injector.Injector;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Collections;
+import java.lang.reflect.AccessibleObject;
 import java.util.List;
 import java.util.Map;
 
@@ -26,56 +22,23 @@ import java.util.Map;
  */
 public class AutoSvydovetsBeanProcessor implements BeanProcessor {
 
-    private final BeanFactory beanFactory;
 
-    public AutoSvydovetsBeanProcessor(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
+    private final List<Injector<? extends AccessibleObject>> injectors;
+
+    public AutoSvydovetsBeanProcessor(List<Injector<? extends AccessibleObject>> injectors) {
+        this.injectors = injectors;
     }
 
     @Override
     public void processBeans(Map<String, Object> rootContext) {
-        for (var entry : rootContext.entrySet()) {
-            Object beanObject = entry.getValue();
-            Class<?> beanType = beanObject.getClass();
-            for (var field : beanType.getDeclaredFields()) {
-                if (field.isAnnotationPresent(AutoSvydovets.class)) {
-                    var dependency = getDependencyForField(field);
-                    initField(beanObject, field, dependency);
-                }
-            }
-        }
+        rootContext.values()
+                .forEach(value -> {
+                            injectors.forEach(injector -> {
+                                        injector.injectDependency(value);
+                                    }
+                            );
+                        }
+                );
     }
 
-    private void initField(Object beanObject, Field field, Object dependency) {
-        try {
-            field.setAccessible(true);
-            field.set(beanObject, dependency);
-        } catch (IllegalAccessException e) {
-            throw new BeanException(e.getMessage(), e);
-        }
-    }
-
-    private Object getDependencyForField(Field field) {
-        if (List.class.isAssignableFrom(field.getType())) {
-            return getBeansCollection(field);
-        }
-        if (field.isAnnotationPresent(Qualifier.class)) {
-            String qualifierValue = field.getAnnotation(Qualifier.class).value();
-            return beanFactory.getBean(qualifierValue, field.getType());
-        } else {
-            return beanFactory.getBean(field.getType());
-        }
-    }
-
-    private List<?> getBeansCollection(Field field) {
-        List<?> beansByType = Collections.emptyList();
-        Type genericType = field.getGenericType();
-        if (genericType instanceof ParameterizedType parameterizedType) {
-            Type[] types = parameterizedType.getActualTypeArguments();
-            if (types.length == 1 && types[0] instanceof Class<?> elementType) {
-                beansByType = beanFactory.getBeansByType(elementType);
-            }
-        }
-        return beansByType;
-    }
 }
