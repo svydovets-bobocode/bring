@@ -27,7 +27,7 @@ class AnnotationApplicationContextTest {
 
     @BeforeAll
     public static void setUp() {
-        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        applicationContext = new AnnotationApplicationContext();
     }
 
     @Test
@@ -71,18 +71,26 @@ class AnnotationApplicationContextTest {
         String packageName = null;
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
                 () -> applicationContext.scan(packageName));
-        assertEquals("Package to scan argument can not be null", thrown.getMessage());
+        assertEquals("Package to scan argument can not be null or empty", thrown.getMessage());
+    }
+
+    @Test
+    public void shouldThrowIfItemInPackagesArgumentIsEmpty() {
+        UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
+                () -> applicationContext.scan(""));
+        assertEquals("Package to scan argument can not be null or empty", thrown.getMessage());
     }
 
     @Test
     public void shouldThrowIfItemInPackagesArgumentIsBlank() {
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
-                () -> applicationContext.scan(""));
-        assertEquals("Package to scan can not be empty", thrown.getMessage());
+                () -> applicationContext.scan(" "));
+        assertEquals("Package to scan argument can not be null or empty", thrown.getMessage());
     }
 
     @Test
     public void shouldRegisterBeanSuccessfully() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var result = applicationContext.getBean(Car.class);
         assertNotNull(result);
         assertEquals(Car.class, result.getClass());
@@ -90,6 +98,7 @@ class AnnotationApplicationContextTest {
 
     @Test
     public void shouldThrowIfRegisterAlreadyExistingBean() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         assertThrows(BeanException.class, () -> applicationContext.register(Car.class));
     }
 
