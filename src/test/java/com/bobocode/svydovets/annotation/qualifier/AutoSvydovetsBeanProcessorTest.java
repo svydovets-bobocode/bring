@@ -6,18 +6,28 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.injector.FieldInjector;
+import com.bobocode.svydovets.annotation.bean.processor.injector.Injector;
+import com.bobocode.svydovets.annotation.bean.processor.injector.SetterInjector;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import javax.annotation.MatchesPattern;
 
 public class AutoSvydovetsBeanProcessorTest {
 
@@ -33,7 +43,7 @@ public class AutoSvydovetsBeanProcessorTest {
         // Initialize the mock
         MockitoAnnotations.openMocks(this).close();
 
-        postProcessor = new AutoSvydovetsBeanProcessor(mockBeanFactory);
+        postProcessor = new AutoSvydovetsBeanProcessor(List.of(new FieldInjector(mockBeanFactory)));
         rootContext = new HashMap<>();
     }
 
