@@ -27,8 +27,7 @@ import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLoca
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import com.bobocode.svydovets.annotation.util.ReflectionUtils;
-
-import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Implementation of the {@link BeanFactory} and @{@link AnnotationRegistry} interfaces.

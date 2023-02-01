@@ -1,38 +1,60 @@
 package com.bobocode.svydovets.annotation.annotations;
 
+import com.bobocode.svydovets.annotation.context.BeanNameResolver;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-//todo: add JavaDocs
+/**
+ * Used to mark class as a special configuration bean, in which it is able to declare
+ * method-configured beans, marked by {@link Bean} annotation.
+ * <p>
+ * Marked classes are also created and stored in context, as {@link Component} ones.
+ * <p>
+ * Example:
+ * <pre class="code">
+ * &#064;Configuration
+ * public class TestConfig {
+ *
+ *     &#064;AutoSvydovets
+ *     private AutoSvydovetsDependency autoSvydovetsDependency;
+ *
+ *     &#064;Bean
+ *     public FooService fooService() {
+ *         FooService fooService = new FooService();
+ *         fooService.setMessage("Foo");
+ *         return fooService;
+ *     }
+ *
+ *     &#064;Bean
+ *     public FooBarService fooBarService() {
+ *         FooBarService fooBarService = new FooBarService(fooService());
+ *         fooBarService.setMessage("Bar");
+ *         return fooBarService;
+ *     }
+ * }
+ * </pre>
+ *
+ * @see Bean
+ * @see Component
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-//ConfigurationTest.class.getAnnotations()[0].annotationType().isAnnotationPresent(Component.class)
 public @interface Configuration {
 
-    //todo: add JavaDocs
+    /**
+     * Explicit name of the Bring bean. If no value is provided - name will be resolved by {@link BeanNameResolver}.
+     *
+     * @see BeanNameResolver
+     */
     String value() default "";
 
-    //todo: refactor JavaDocs
     /**
      * Specify whether {@code @Bean} methods should get proxied in order to enforce
      * bean lifecycle behavior, e.g. to return shared singleton bean instances even
-     * in case of direct {@code @Bean} method calls in user code. This feature
-     * requires method interception, implemented through a runtime-generated CGLIB
-     * subclass which comes with limitations such as the configuration class and
-     * its methods not being allowed to declare {@code final}.
-     * <p>The default is {@code true}, allowing for 'inter-bean references' via direct
-     * method calls within the configuration class as well as for external calls to
-     * this configuration's {@code @Bean} methods, e.g. from another configuration class.
-     * If this is not needed since each of this particular configuration's {@code @Bean}
-     * methods is self-contained and designed as a plain factory method for container use,
-     * switch this flag to {@code false} in order to avoid CGLIB subclass processing.
-     * <p>Turning off bean method interception effectively processes {@code @Bean}
-     * methods individually like when declared on non-{@code @Configuration} classes,
-     * a.k.a. "@Bean Lite Mode" (see {@link Bean @Bean's javadoc}). It is therefore
-     * behaviorally equivalent to removing the {@code @Configuration} stereotype.
-     * @since 5.2
+     * in case of direct {@code @Bean} method calls in user code.
      */
     boolean proxyBeanMethods() default true;
 }
