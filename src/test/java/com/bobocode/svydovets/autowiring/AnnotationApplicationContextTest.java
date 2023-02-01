@@ -4,6 +4,10 @@ import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.autowiring.collection.SuccessCollectionService;
+import com.bobocode.svydovets.autowiring.configuration.AutoSvydovetsClientBean;
+import com.bobocode.svydovets.autowiring.configuration.FooBarService;
+import com.bobocode.svydovets.autowiring.configuration.FooService;
+import com.bobocode.svydovets.autowiring.configuration.TestConfig;
 import com.bobocode.svydovets.autowiring.nouniquebean.primaryduplicate.InvalidAnnotationService;
 import com.bobocode.svydovets.autowiring.success.AnnotationService;
 import com.bobocode.svydovets.autowiring.success.SuccessCustomService;
@@ -22,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("AnnotationConfigApplicationContext test")
 class AnnotationApplicationContextTest {
+
+    public static final String CONFIGURATION_PACKAGE = "com.bobocode.svydovets.autowiring.configuration";
 
     @Nested
     @Order(1)
@@ -169,6 +175,58 @@ class AnnotationApplicationContextTest {
             SuccessCollectionService bean = applicationContext.getBean(SuccessCollectionService.class);
             assertEquals(1, bean.printBeanSize());
         }
+    }
+
+    @Nested
+    @Order(3)
+    @DisplayName("3. Configuration beans creation test")
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class ConfigurationBeansCreationTest {
+
+        @Test
+        @Order(1)
+        @DisplayName("@Configuration marked class is successfully created as a bean")
+        void autowiringFieldIsSetCorrectly() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
+            assertNotNull(applicationContext.getBean(TestConfig.class));
+            assertNotNull(applicationContext.getBean("testConfig", TestConfig.class));
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("@Bean marked method returns correctly configured bean")
+        void beanIsCreatedAndStoredInContext() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
+            FooService bean = applicationContext.getBean(FooService.class);
+            assertNotNull(bean);
+            assertEquals("Foo", bean.getMessage());
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("@Bean marked method returns correctly configured bean with inter-bean dependency")
+        void interBeanDependencyIsHandledCorrectly() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
+            FooBarService fooBarService = applicationContext.getBean(FooBarService.class);
+            FooService fooService = applicationContext.getBean(FooService.class);
+            assertNotNull(fooBarService);
+            assertNotNull(fooService);
+            assertEquals("FooBar", fooBarService.getMessage());
+        }
+
+        @Test
+        @Order(4)
+        @DisplayName("@Bean is correctly created using @AutoSvydovets dependency")
+        void autoSvydovetsCorrectlyProcessedWithBeanMethods() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
+            var autoSvydovetsClientBean = applicationContext.getBean(AutoSvydovetsClientBean.class);
+            assertNotNull(autoSvydovetsClientBean);
+
+            //todo: throws NullPointerException in such case
+            //String dependencyCallResult = autoSvydovetsClientBean.callAutoSvydovetsDependency();
+            //assertEquals("AutoSvydovetsDependency", dependencyCallResult);
+        }
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.bobocode.svydovets.annotation.annotations;
 
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.annotation.context.BeanNameResolver;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 
 import java.lang.annotation.ElementType;
@@ -20,9 +21,9 @@ import java.lang.annotation.Target;
 public @interface Component {
 
     /**
-     * Explicit name of the Bring bean. If no value is provided - name will be resolved by context.
+     * Explicit name of the Bring bean. If no value is provided - name will be resolved by {@link BeanNameResolver}.
      *
-     * @see AnnotationApplicationContext#resolveBeanName(Class)
+     * @see BeanNameResolver
      */
     String value() default "";
 }
