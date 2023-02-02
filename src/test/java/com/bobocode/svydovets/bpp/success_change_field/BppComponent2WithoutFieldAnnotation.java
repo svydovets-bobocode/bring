@@ -1,0 +1,13 @@
+package com.bobocode.svydovets.bpp.success_change_field;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+
+@Component
+public class BppComponent2WithoutFieldAnnotation {
+
+    private String string = "not null value";
+
+    public String getString() {
+        return string;
+    }
+}
