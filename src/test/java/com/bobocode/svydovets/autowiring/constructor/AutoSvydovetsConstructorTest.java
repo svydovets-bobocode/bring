@@ -21,7 +21,7 @@ public class AutoSvydovetsConstructorTest {
     @Test
     @Order(1)
     @DisplayName("Bean dependencies is correctly set by the constructor-injection")
-    void setBeanByTypeSettsCorrectBeanByQualifierIntoSetterShouldReturnSameBeanFromContext() {
+    void createBeanWithConstructorBasedDependencies() {
         Service constructorInjectionBean = applicationContext.getBean(Service.class);
         assertNotNull(constructorInjectionBean);
         assertEquals("FooBar", constructorInjectionBean.getMessage());
