@@ -1,4 +1,4 @@
-package com.bobocode.svydovets.autowiring.constructor;
+package com.bobocode.svydovets.autowiring.constructor.success;
 
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Component;
