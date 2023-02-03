@@ -129,6 +129,7 @@
                 <version>0.8.8</version>
                 <executions>
                     <execution>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -163,7 +164,6 @@
                                     </limits>
                                     <excludes>
                                         <exclude>com.bobocode.svydovets.annotation.exception.**</exclude>
-                                        <exclude>com.bobocode.svydovets.annotation.bean.processor.**</exclude>
                                         <exclude>com.bobocode.svydovets.annotation.register.**</exclude>
                                     </excludes>
                                 </rule>
