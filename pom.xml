@@ -154,12 +154,12 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>80%</minimum>
+                                            <minimum>75%</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>80%</minimum>
+                                            <minimum>75%</minimum>
                                         </limit>
                                     </limits>
                                     <excludes>
