@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * Used to inject values from the .properties file.
  */
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Value {
     String value();

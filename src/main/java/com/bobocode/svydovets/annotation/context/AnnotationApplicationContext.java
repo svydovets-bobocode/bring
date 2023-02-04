@@ -20,15 +20,12 @@ import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcess
 import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.ValueProcessor;
-import com.bobocode.svydovets.annotation.bean.processor.ValueProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.injector.ConstructorInjector;
 import com.bobocode.svydovets.annotation.bean.processor.injector.FieldInjector;
 import com.bobocode.svydovets.annotation.bean.processor.injector.Injector;
 import com.bobocode.svydovets.annotation.bean.processor.injector.SetterInjector;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
-import com.bobocode.svydovets.annotation.properties.ApplicationPropertySource;
-import com.bobocode.svydovets.annotation.properties.PropertySources;
 import com.bobocode.svydovets.annotation.properties.ApplicationPropertySource;
 import com.bobocode.svydovets.annotation.properties.PropertySources;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
@@ -58,6 +55,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     private List<BeanPostProcessor> beanPostProcessors;
     private List<BeanProcessor> beanProcessors;
     private List<Injector<? extends AccessibleObject>> injectors;
+    private PropertySources propertySources;
 
     public AnnotationApplicationContext(String... packages) {
         initProcessors(packages);
@@ -68,8 +66,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     private void initProcessors(String... packages) {
         initInjectors();
-        var propertySources = new PropertySources();
-        propertySources.addLast(new ApplicationPropertySource("application.properties"));
+        initPropertySources();
         this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(injectors),
                                       new ValueProcessor(this, propertySources));
         this.beanPostProcessors = new BeanPostProcessorScanner().scan(packages);
@@ -79,6 +76,12 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
        injectors = List.of(new SetterInjector(this),
                new FieldInjector(this),
                new ConstructorInjector(this));
+    }
+
+    private void initPropertySources() {
+        propertySources = new PropertySources();
+        propertySources.addLast(new ApplicationPropertySource("application.properties"));
+
     }
 
     @Override

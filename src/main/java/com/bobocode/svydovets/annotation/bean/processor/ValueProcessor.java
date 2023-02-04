@@ -43,7 +43,9 @@ public class ValueProcessor implements BeanProcessor {
      * @param rootContext a map that stores the objects representing the beans
      */
     public void processBeans(Map<String, Object> rootContext) {
-        if (!propertyLoaded()) return;
+        if (!propertyLoaded()) {
+            return;
+        }
         Set<String> beanNames = beanFactory.getBeanDefinitionNames();
 
         for (String beanName : beanNames) {
@@ -80,7 +82,9 @@ public class ValueProcessor implements BeanProcessor {
      * @return the value of the property with the specified name or `null` if the property is not found
      */
     private <T> T getPropertyValue(String propertyName, Class<T> clazz) {
-        if (!propertyName.matches("\\{.*?}")) return clazz.cast(propertyName);
+        if (!propertyName.matches("\\{.*?}")) {
+            return clazz.cast(propertyName);
+        }
         String propValue = propertySources.getPropertySources()
                 .stream()
                 .map(ps -> ps.getProperty(propertyName.replaceAll("\\{|}", "")))
@@ -88,7 +92,9 @@ public class ValueProcessor implements BeanProcessor {
                 .findFirst()
                 .orElse(null);
 
-        if (propValue == null) return null;
+        if (propValue == null) {
+            return null;
+        }
 
         if (clazz.isAssignableFrom(List.class)) {
             return clazz.cast(Arrays.asList(propValue.split(",")));
