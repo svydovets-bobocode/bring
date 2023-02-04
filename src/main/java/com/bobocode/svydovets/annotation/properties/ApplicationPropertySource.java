@@ -33,7 +33,7 @@ public class ApplicationPropertySource implements PropertySource<Properties> {
 
     @Override
     public String getProperty(String name) {
-        return (String) properties.get(name);
+        return properties == null ? null : (String) properties.get(name);
     }
 
     @Override
