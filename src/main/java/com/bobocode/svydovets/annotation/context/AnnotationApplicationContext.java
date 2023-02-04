@@ -17,7 +17,9 @@ import java.util.Set;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.ValueProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.ValueProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.injector.ConstructorInjector;
 import com.bobocode.svydovets.annotation.bean.processor.injector.FieldInjector;
@@ -27,10 +29,15 @@ import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
 import com.bobocode.svydovets.annotation.properties.ApplicationPropertySource;
 import com.bobocode.svydovets.annotation.properties.PropertySources;
+import com.bobocode.svydovets.annotation.properties.ApplicationPropertySource;
+import com.bobocode.svydovets.annotation.properties.PropertySources;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
+import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessorScanner;
 import com.bobocode.svydovets.annotation.util.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import static com.bobocode.svydovets.annotation.exception.BeanException.BEAN_INSTANCE_MUST_NOT_BE_NULL;
 
 /**
  * Implementation of the {@link BeanFactory} and @{@link AnnotationRegistry} interfaces.
@@ -48,22 +55,24 @@ import org.apache.commons.lang3.StringUtils;
 public class AnnotationApplicationContext extends AnnotationBeanFactory implements AnnotationRegistry {
 
     private BeanNameResolver beanNameResolver = new DefaultBeanNameResolver();
+    private List<BeanPostProcessor> beanPostProcessors;
     private List<BeanProcessor> beanProcessors;
     private List<Injector<? extends AccessibleObject>> injectors;
 
     public AnnotationApplicationContext(String... packages) {
-        initProcessors();
+        initProcessors(packages);
         Set<Class<?>> beanClasses = this.scan(packages);
         register(beanClasses.toArray(Class[]::new));
         beanProcessors.forEach(beanPostProcessor -> beanPostProcessor.processBeans(rootContextMap));
     }
 
-    private void initProcessors() {
+    private void initProcessors(String... packages) {
         initInjectors();
         var propertySources = new PropertySources();
         propertySources.addLast(new ApplicationPropertySource("application.properties"));
         this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(injectors),
                                       new ValueProcessor(this, propertySources));
+        this.beanPostProcessors = new BeanPostProcessorScanner().scan(packages);
     }
 
     private void initInjectors() {
@@ -81,7 +90,8 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         return beanClasses;
     }
 
-    void validateScanArgument(String... packages) {
+    //todo: add more tests for multiple packages
+    private void validateScanArgument(String... packages) {
         if (packages == null) {
             throw new UnprocessableScanningBeanLocationException("Packages to scan argument can not be null");
         }
@@ -96,6 +106,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
             Constructor<?> constructor = getConstructor(beanType);
             Object bean = createInstance(constructor);
             String beanName = beanNameResolver.resolveBeanName(beanType);
+            bean = processBean(bean, beanName);
             registerBean(beanName, bean);
             if (beanType.isAnnotationPresent(Configuration.class)) {
                 registerMethodBasedBeans(bean, beanType);
@@ -115,8 +126,31 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         try {
             return constructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new BeanException("Can't create instance", e);
+            throw new BeanException("Can't create instance ", e);
         }
+    }
+
+    private Object postProcessesBeforeInitialization(Object bean, String beanName) {
+        for (BeanPostProcessor processor : this.beanPostProcessors) {
+            bean = processor.postProcessBeforeInitialization(bean, beanName);
+        }
+
+        return bean;
+    }
+
+    private Object postProcessesAfterInitialization(Object bean, String beanName) {
+        for (BeanPostProcessor processor : this.beanPostProcessors) {
+            bean = processor.postProcessAfterInitialization(bean, beanName);
+        }
+
+        return bean;
+    }
+
+    private Object processBean(Object bean, String beanName) {
+        bean = postProcessesBeforeInitialization(bean, beanName);
+        //todo: here will be PostConstruct execution
+        bean = postProcessesAfterInitialization(bean, beanName);
+        return bean;
     }
 
     private void registerBean(String beanName, Object bean) {
@@ -124,6 +158,10 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void registerBean(String beanName, Object bean, Method method) {
+        if (bean == null) {
+            throw new BeanException(BEAN_INSTANCE_MUST_NOT_BE_NULL);
+        }
+
         Object oldObject = rootContextMap.get(beanName);
         if (oldObject != null) {
             throw new BeanException(String.format(
@@ -169,6 +207,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
                 .forEach(method -> {
                     String beanName = beanNameResolver.resolveBeanName(method);
                     Object methodBean = invokeMethod(object, method);
+                    methodBean = processBean(methodBean, beanName);
                     registerBean(beanName, methodBean, method);
                 });
     }
