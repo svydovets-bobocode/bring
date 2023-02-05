@@ -187,7 +187,6 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         beanDefinitionMap.put(beanName, beanDefinition);
     }
 
-
     private static boolean isPrimary(Annotation[] annotations) {
         for (Annotation annotation : annotations) {
             if (annotation.annotationType().equals(Primary.class)) {
