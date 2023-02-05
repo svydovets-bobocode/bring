@@ -4,7 +4,6 @@ import com.bobocode.svydovets.annotation.annotations.Bean;
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Configuration;
 import com.bobocode.svydovets.annotation.annotations.Primary;
-import com.bobocode.svydovets.annotation.annotations.Scope;
 import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
 
 import java.lang.annotation.Annotation;
@@ -14,7 +13,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
 import java.util.Set;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
@@ -30,7 +28,6 @@ import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLoca
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessorScanner;
-import com.bobocode.svydovets.annotation.register.BeanScope;
 import com.bobocode.svydovets.annotation.util.LogoUtils;
 import com.bobocode.svydovets.annotation.util.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -178,16 +175,19 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     private void fillBeanDefinition(String beanName, Class<?> beanType, Annotation[] annotations) {
         boolean isPrimary = isPrimary(annotations);
+//        var beanScope = getBeanScope(beanType);
 
         var beanDefinition = BeanDefinition.builder()
                 .beanClass(beanType)
                 .beanName(beanName)
                 .isPrimary(isPrimary)
+//                .scope(beanScope)`
 //                .qualifier()
 //                .isLazy()
                 .build();
         beanDefinitionMap.put(beanName, beanDefinition);
     }
+
 
     private static boolean isPrimary(Annotation[] annotations) {
         for (Annotation annotation : annotations) {
