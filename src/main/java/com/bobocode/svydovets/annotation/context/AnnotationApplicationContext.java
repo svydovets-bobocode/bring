@@ -175,13 +175,12 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     private void fillBeanDefinition(String beanName, Class<?> beanType, Annotation[] annotations) {
         boolean isPrimary = isPrimary(annotations);
-//        var beanScope = getBeanScope(beanType);
 
         var beanDefinition = BeanDefinition.builder()
                 .beanClass(beanType)
                 .beanName(beanName)
                 .isPrimary(isPrimary)
-//                .scope(beanScope)`
+//                .scope()
 //                .qualifier()
 //                .isLazy()
                 .build();
