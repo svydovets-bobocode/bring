@@ -7,6 +7,7 @@ import com.bobocode.svydovets.annotation.register.BeanDefinition;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -60,12 +61,9 @@ public class AnnotationBeanFactory implements BeanFactory {
 
     @Override
     public <T> T getBean(String beanName, Class<T> beanType) {
-        return rootContextMap.entrySet().stream()
-                .filter(beanEntry -> beanName.equals(beanEntry.getKey()))
-                .findAny()
-                .map(Map.Entry::getValue)
+        return Optional.ofNullable(rootContextMap.get(beanName))
                 .map(beanType::cast)
-                .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
+                .orElseThrow(() -> new NoSuchBeanException("No such bean with type " + beanType.getName()));
     }
 
     @Override
