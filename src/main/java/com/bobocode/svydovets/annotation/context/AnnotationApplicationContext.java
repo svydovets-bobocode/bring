@@ -151,7 +151,9 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     private Object processBean(Object bean, String beanName) {
         bean = postProcessesBeforeInitialization(bean, beanName);
-        //todo: here will be PostConstruct execution
+        if (bean != null) {
+            PostConstructHandler.processPostConstruct(bean);
+        }
         bean = postProcessesAfterInitialization(bean, beanName);
         return bean;
     }
