@@ -62,18 +62,27 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     public AnnotationApplicationContext(String... packages) {
         log.info(LogoUtils.getBringLogo());
+        long start = System.currentTimeMillis();
+        log.info("Loading source from packages: {}", Arrays.toString(packages));
+        initInjectors();
+        log.debug("Injectors successfully initialized: {}", injectors);
         initProcessors(packages);
+        log.info("Scanning packages process");
         Set<Class<?>> beanClasses = this.scan(packages);
+        log.info("Register beans");
         register(beanClasses.toArray(Class[]::new));
+        log.info("PostProcess beans");
         beanProcessors.forEach(beanPostProcessor -> beanPostProcessor.processBeans(rootContextMap));
+        log.info("Context created in {} seconds", (System.currentTimeMillis() - start) / 1000.0);
     }
 
     private void initProcessors(String... packages) {
-        initInjectors();
         initPropertySources();
         this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(injectors),
                                       new ValueProcessor(this, propertySources));
+        log.debug("BeanProcessors successfully initialized: {}", beanProcessors);
         this.beanPostProcessors = new BeanPostProcessorScanner().scan(packages);
+        log.debug("BeanPostProcessors successfully initialized: {}", beanPostProcessors);
     }
 
     private void initInjectors() {
@@ -90,8 +99,11 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
 
     @Override
     public Set<Class<?>> scan(String... packages) {
+        log.trace("Validating packages: {}", Arrays.toString(packages));
         validateScanArgument(packages);
+        log.trace("Scanning packages for annotated components");
         Set<Class<?>> beanClasses = ReflectionUtils.scan(Component.class, packages);
+        log.trace("Scanning packages for configurations");
         Set<Class<?>> configurationClasses = ReflectionUtils.scan(Configuration.class, packages);
         beanClasses.addAll(configurationClasses);
         return beanClasses;
@@ -111,8 +123,10 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     public void register(Class<?>... componentClasses) {
         for (Class<?> beanType : componentClasses) {
             Constructor<?> constructor = getConstructor(beanType);
+            log.trace("Create bean instance {}", beanType.getName());
             Object bean = createInstance(constructor);
             String beanName = beanNameResolver.resolveBeanName(beanType);
+            log.trace("Process beans");
             bean = processBean(bean, beanName);
             registerBean(beanName, bean);
             if (beanType.isAnnotationPresent(Configuration.class)) {
@@ -138,18 +152,18 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private Object postProcessesBeforeInitialization(Object bean, String beanName) {
+        log.trace("PostProcessesBeforeInitialization process");
         for (BeanPostProcessor processor : this.beanPostProcessors) {
             bean = processor.postProcessBeforeInitialization(bean, beanName);
         }
-
         return bean;
     }
 
     private Object postProcessesAfterInitialization(Object bean, String beanName) {
+        log.trace("PostProcessesAfterInitialization process");
         for (BeanPostProcessor processor : this.beanPostProcessors) {
             bean = processor.postProcessAfterInitialization(bean, beanName);
         }
-
         return bean;
     }
 
@@ -163,6 +177,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void registerBean(String beanName, Object bean) {
+        log.trace("Register bean {}", beanName);
         registerBean(beanName, bean, null);
     }
 
@@ -188,6 +203,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void fillBeanDefinition(String beanName, Class<?> beanType, Annotation[] annotations) {
+        log.trace("Fill BeanDefinitions");
         boolean isPrimary = isPrimary(annotations);
 
         var beanDefinition = BeanDefinition.builder()
@@ -202,6 +218,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private static boolean isPrimary(Annotation[] annotations) {
+        log.trace("Check isPrimary");
         for (Annotation annotation : annotations) {
             if (annotation.annotationType().equals(Primary.class)) {
                 return true;
@@ -211,6 +228,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void registerMethodBasedBeans(Object object, Class<?> configurationType) {
+        log.trace("Register beans based on method");
         Arrays.stream(configurationType.getDeclaredMethods())
                 .filter(method -> method.isAnnotationPresent(Bean.class))
                 .forEach(method -> {
