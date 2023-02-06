@@ -31,7 +31,9 @@ import com.bobocode.svydovets.annotation.properties.PropertySources;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessorScanner;
+import com.bobocode.svydovets.annotation.util.LogoUtils;
 import com.bobocode.svydovets.annotation.util.ReflectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.bobocode.svydovets.annotation.exception.BeanException.BEAN_INSTANCE_MUST_NOT_BE_NULL;
@@ -49,6 +51,7 @@ import static com.bobocode.svydovets.annotation.exception.BeanException.BEAN_INS
  * @see BeanFactory
  * @see BeanProcessor
  */
+@Slf4j
 public class AnnotationApplicationContext extends AnnotationBeanFactory implements AnnotationRegistry {
 
     private BeanNameResolver beanNameResolver = new DefaultBeanNameResolver();
@@ -58,6 +61,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     private PropertySources propertySources;
 
     public AnnotationApplicationContext(String... packages) {
+        log.info(LogoUtils.getBringLogo());
         initProcessors(packages);
         Set<Class<?>> beanClasses = this.scan(packages);
         register(beanClasses.toArray(Class[]::new));
@@ -190,8 +194,8 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
                 .beanClass(beanType)
                 .beanName(beanName)
                 .isPrimary(isPrimary)
-//                .qualifier()
 //                .scope()
+//                .qualifier()
 //                .isLazy()
                 .build();
         beanDefinitionMap.put(beanName, beanDefinition);
