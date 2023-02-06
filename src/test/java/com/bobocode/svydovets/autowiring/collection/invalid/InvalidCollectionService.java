@@ -1,4 +1,4 @@
-package com.bobocode.svydovets.autowiring.collection;
+package com.bobocode.svydovets.autowiring.collection.invalid;
 
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Component;
@@ -6,10 +6,10 @@ import com.bobocode.svydovets.annotation.annotations.Component;
 import java.util.List;
 
 @Component
-public class SuccessCollectionService {
+public class InvalidCollectionService {
 
     @AutoSvydovets
-    private List<SampleBean> beans;
+    private List beans;
 
     public int printBeanSize() {
         return beans.size();

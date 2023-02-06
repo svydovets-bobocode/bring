@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+
 public class FieldInjector extends AbstractInjector<Field> {
 
     public FieldInjector(BeanFactory beanFactory) {
@@ -44,6 +46,8 @@ public class FieldInjector extends AbstractInjector<Field> {
                     return beanFactory.getBeansByType(elementType);
                 }
             }
+            throw new BeanException(format("@AutoSvydovets collection %s should not be raw used for field '%s'",
+                        injectType.getSimpleName(), accessibleObject.getName()));
         }
         return super.getDependency(accessibleObject, injectType);
     }
