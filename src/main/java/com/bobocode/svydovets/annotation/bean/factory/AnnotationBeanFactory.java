@@ -8,6 +8,7 @@ import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -79,5 +80,13 @@ public class AnnotationBeanFactory implements BeanFactory {
                 .filter(bean -> beanType.isAssignableFrom(bean.getClass()))
                 .map(beanType.asSubclass(beanType)::cast)
                 .collect(Collectors.toList());
+    }
+
+    public BeanDefinition getBeanDefinition(String beanName) {
+        return beanDefinitionMap.get(beanName);
+    }
+
+    public Set<String> getBeanDefinitionNames() {
+        return beanDefinitionMap.keySet();
     }
 }

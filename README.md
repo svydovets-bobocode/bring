@@ -1,1 +1,400 @@
+![img.png](assets/img.png)
+
 # bring-svydovets
+
+## Project description
+
+---
+
+[//]: # (Bring is a dependency injection framework. It uses IoC &#40;Inversion of Control&#41; container --------?????????????????????????????????????????????????)
+[//]: # (**Bring project is an implementation of the [Inversion of control container &#40;IoC&#41;]&#40;https://en.wikipedia.org/wiki/Dependency_injection&#41;.**)
+
+Objects created by the container are also called managed objects or beans. 
+The container can be configured by detecting specific Java annotations.
+
+Objects can be obtained by means of either dependency lookup or dependency injection. 
+Dependency lookup is a pattern where a caller asks the container object for an object with a specific name or of a specific type. 
+Dependency injection is a pattern where the container passes objects by name to other objects, via either constructors, properties.
+
+
+## Get started
+
+---
+1. ```git clone https://github.com/rovein/bring-svydovets```
+2. ```cd <path_to_bring_svydovets>/bring-svydovets```
+3. ```mvn clean install -DskipTests```
+4. add as a dependency
+```
+<dependency>
+   <groupId>com.bobocode.svydovets</groupId>
+   <artifactId>bring-svydovets</artifactId>
+   <version>1.0</version>
+</dependency>
+```
+
+
+## Features
+
+---
+- **[Application context](#context)**
+- **[@Configuration](#configuration)** - configuration file
+- **[@Bean](#bean)**, **[@Component](#component)** - class that managed by IoC container ([@Component versus @Bean](#component-versus-bean))
+- **[@AutoSvydovets](#autoSvydovets)** - [field](#field-injection)/[constructor](#constructor-injection)/[setter](#setter-injection) injection
+- **[@Qualifier](#qualifier)** - specify a bean name
+
+[//]: # (- **[@Value]&#40;#value&#41;** - value from a properties file)
+- **[@Primary](#primary)** - make preferable for injection without specifying the bean name
+- **[BeanPostProcessor](#beanPostProcessor)** - 
+
+
+### Context
+
+---
+Create new instance of **AnnotationApplicationContext**
+and pass a string with packages name as a parameter. 
+This packages and all sub packages will be scanned and beans will be added to the context.
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.autowiring.success.SuccessPrinterServiceImpl;
+
+public class Application {
+  public static void main(String[] args) {
+    AnnotationApplicationContext applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.success");
+    SuccessPrinterServiceImpl printerService = applicationContext.getBean(SuccessPrinterServiceImpl.class);
+  }
+}
+```
+</details>
+
+
+### @Configuration
+
+---
+To mark a class that will contain beans - use **@Configuration** annotation. 
+To declare a bean create a method and mark it as **[@Bean](#bean)**.
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+import com.bobocode.svydovets.annotation.annotations.Bean;
+import com.bobocode.svydovets.annotation.annotations.Configuration;
+
+@Configuration
+public class TestConfig {
+
+    @AutoSvydovets
+    private AutoSvydovetsDependency autoSvydovetsDependency;
+
+    @Bean
+    public FooService fooService() {
+        FooService fooService = new FooService();
+        fooService.setMessage("Foo");
+        return fooService;
+    }
+
+    @Bean
+    public FooBarService fooBarService() {
+        FooBarService fooBarService = new FooBarService(fooService());
+        fooBarService.setMessage("Bar");
+        return fooBarService;
+    }
+
+    @Bean
+    public AutoSvydovetsClientBean autoSvydovetsClientBean() {
+        return new AutoSvydovetsClientBean(autoSvydovetsDependency);
+    }
+}
+```
+</details>
+
+
+### @Component versus @Bean
+
+---
+- **[@Component](#component)** is a class level annotation (annotation configuration) whereas **[@Bean](#bean)** is a method level annotation (Java configuration).
+- **[@Component](#component)** need not be used with the **[@Configuration](#configuration)** annotation whereas **[@Bean](#bean)** annotation has to be used within the class which is annotated with **[@Configuration](#configuration)**.
+- We cannot create a bean of a class using **[@Component](#component)**, if the class is outside bring container whereas we can create a bean of a class using **[@Bean](#bean)** even if the class is present outside the bring container.
+
+
+### @Bean
+
+---
+Is a class that managed by IoC container.
+Used inside annotated class with **[@Configuration](#configuration)**.
+By default, **bean name = method name**. 
+The bean name can be provided via the annotation property `value`
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+import com.bobocode.svydovets.annotation.annotations.Bean;
+import com.bobocode.svydovets.annotation.annotations.Configuration;
+
+@Configuration
+public class TestConfig {
+    @Bean("fooService1")
+    public FooService foo() {
+        return new FooService();
+    }
+}
+```
+</details>
+
+
+### @Component
+
+---
+Is a class that managed by IoC container.
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.annotations.Component;
+
+@Component
+public class AutoSvydovetsDependency {
+    
+}
+```
+</details>
+
+By default, **component name = class name**.
+The component name can be provided via the annotation property `value`
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.annotations.Component;
+
+@Component("bean1")
+public class Service {
+    
+}
+```
+</details>
+
+
+### @AutoSvydovets
+
+---
+**Not recommended** to use together [constructor injection](#constructor-injection) **with** [field injection](#field-injection) - it may lead to unpredictable results.
+
+> #### Field injection
+> 
+>><details>
+>><summary>Example</summary> 
+>>
+>>```java
+>>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.annotation.annotations.Component;
+>>
+>>@Component("printer-bean")
+>>public class SuccessPrinterServiceImpl {
+>>      @AutoSvydovets
+>>      private SuccessMessageServiceImpl messageService;
+>>
+>>      @AutoSvydovets
+>>      @Qualifier("dependencyImpl")
+>>      private Dependency dependency;
+>>}
+>>```
+>> When a `NoUniqueBeanException` occurs, use **[@Primary](#primary)** or **[@Qualifier](#qualifier)**.
+>></details>
+
+> #### Constructor injection
+>
+>><details>
+>><summary>Example</summary> 
+>>
+>>```java
+>>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.annotation.annotations.Component;
+>>
+>>@Component
+>>public class Service {
+>>
+>>    private BarDependency barDependency;
+>>
+>>    public Service() {
+>>    }
+>>
+>>    @AutoSvydovets
+>>    public Service(FooDependency fooDependency, BarDependency barDependency) {
+>>        this.barDependency = barDependency;
+>>    }
+>>}
+>>```
+>> For constructor injection, we necessarily need a default constructor.
+>> When a `NoUniqueBeanException` occurs, use **[@Primary](#primary)** or **[@Qualifier](#qualifier)**.
+>></details>
+
+> #### Setter injection
+>
+>><details>
+>><summary>Example</summary> 
+>>
+>>```java
+>>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.annotation.annotations.Component;
+>>import com.bobocode.svydovets.annotation.annotations.Qualifier;
+>>
+>>@Component("printer-bean")
+>>public class SetterSuccessPrinterServiceImpl {
+>>    private SetterSuccessMessageService messageService;
+>>
+>>    @AutoSvydovets
+>>    @Qualifier("setterSuccessMessageService1Impl")
+>>    public void setMessageService(SetterSuccessMessageService messageService) {
+>>        this.messageService = messageService;
+>>    }
+>>}
+>>```
+>> When a `NoUniqueBeanException` occurs, use **[@Primary](#primary)** or **[@Qualifier](#qualifier)**.
+>></details>
+
+
+### @Qualifier
+
+---
+If there are multiple implementations of interface, `@Qualifier` can be used with name of implementation with `@Autowired` annotation.
+
+Сan be used with [field injection](#field-injection-qualifier)/[setter injection](#setter-injection-qualifier)
+
+> #### Field injection qualifier
+>
+>><details>
+>><summary>Example</summary> 
+>>
+>>```java
+>>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.annotation.annotations.Component;
+>>
+>>@Component("printer-bean")
+>>public class SuccessPrinterServiceImpl {
+>>      @AutoSvydovets
+>>      @Qualifier("dependencyImpl")
+>>      private Dependency dependency;
+>>}
+>>```
+>></details>
+
+> #### Setter injection qualifier
+>
+>><details>
+>><summary>Example</summary> 
+>>
+>>```java
+>>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.annotation.annotations.Component;
+>>import com.bobocode.svydovets.annotation.annotations.Qualifier;
+>>
+>>@Component("printer-bean")
+>>public class SetterSuccessPrinterServiceImpl {
+>>    private SetterSuccessMessageService messageService;
+>>
+>>    @AutoSvydovets
+>>    @Qualifier("setterSuccessMessageService1Impl")
+>>    public void setMessageService(SetterSuccessMessageService messageService) {
+>>        this.messageService = messageService;
+>>    }
+>>}
+>>```
+>></details>
+
+
+### @Primary
+
+---
+If you have multiple implementations of the same type, 
+you can make one of them preferable to implement by using **[@Primary](#primary)** annotation.
+
+Put on top of a **[@Component](#component)** class.
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Primary;
+
+@Component
+@Primary
+public class SecondaryAnnotationService {
+    
+}
+```
+</details>
+
+
+### @BeanPostProcessor
+
+---
+This interface allows custom modification of new bean instances.
+The BeanPostProcessor methods will apply to all beans.
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.annotation.exception.BeanException;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+
+public class MyAnnotationBeanPostProcessor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+        List<Field> fields = Arrays.stream(bean.getClass().getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(ToNull.class))
+                .toList();
+
+        for (Field field : fields) {
+            inject(bean, field);
+        }
+
+        return bean;
+    }
+
+    private void inject(Object bean, Field field) {
+        try {
+            field.setAccessible(true);
+            field.set(bean, null);
+        } catch (IllegalAccessException e) {
+            throw new BeanException(e.getMessage(), e);
+        }
+    }
+}
+
+@Component
+public class BppComponent1WithFieldAnnotation {
+
+    @ToNull
+    private String string = "not null";
+}
+```
+</details>
+
+<br/>
+<br/>
+<br/>
+
+## Authors
+
+---
+### **Connect With US**
+- [Stanislav Kotyhrobov](https://github.com/rnyPlanet)
+<a rel="nofollow" href="https://www.linkedin.com/in/stanislav-grinin-6b6069152/"><img src="assets/linkedin.png" height="15" width="15"/></a>
+<a rel="nofollow" href="https://www.instagram.com/axelr0dd/"><img src="assets/instagram.png" height="15" width="15"/></a>
+- 

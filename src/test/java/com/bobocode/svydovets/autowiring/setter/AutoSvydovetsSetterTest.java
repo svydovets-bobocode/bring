@@ -1,6 +1,7 @@
 package com.bobocode.svydovets.autowiring.setter;
 
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.autowiring.setter.invalid.NonSetterMethod;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,5 +55,14 @@ class AutoSvydovetsSetterTest {
         SetterSuccessPrinterServiceImpl printerService = applicationContext.getBean(SetterSuccessPrinterServiceImpl.class);
 
         assertEquals(messageService.getPrinterService(), printerService);
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Dependency will not be injected if method name is not started with 'set'")
+    void dependencyIsNotInjectedIntoNonSetterMethod() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.setter.invalid");
+        NonSetterMethod bean = applicationContext.getBean(NonSetterMethod.class);
+        assertNull(bean.getDependency());
     }
 }

@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 public class ConstructorInjector extends AbstractInjector<Field> {
 
     public ConstructorInjector(BeanFactory beanFactory) {
@@ -22,16 +24,26 @@ public class ConstructorInjector extends AbstractInjector<Field> {
                 .filter(this::isAutoSvydovetsPresent)
                 .findFirst()
                 .ifPresent(constructor -> {
+                    Class<?>[] parameterTypes = constructor.getParameterTypes();
                     for (int i = 0; i < constructor.getParameterCount(); i++) {
                         try {
-                            var field = beanObject.getClass().getField(constructor.getTypeParameters()[i].getName());
-                            accessibleObjects.put(constructor.getParameterTypes()[i], field);
+                            Class<?> parameterType = parameterTypes[i];
+                            var field = retrieveFieldForParameterType(beanObject, parameterType);
+                            accessibleObjects.put(parameterType, field);
                         } catch (NoSuchFieldException e) {
                             throw new FieldNotFoundException(e.getMessage());
                         }
                     }
                 });
         return accessibleObjects;
+    }
+
+    private Field retrieveFieldForParameterType(Object beanObject, Class<?> parameterType) throws NoSuchFieldException {
+        return Arrays.stream(beanObject.getClass().getDeclaredFields())
+                .filter(field -> field.getType().isAssignableFrom(parameterType))
+                .findFirst()
+                .orElseThrow(() -> new BeanException(
+                        format("No field found for constructor-passed parameter type %s", parameterType.getName())));
     }
 
     @Override

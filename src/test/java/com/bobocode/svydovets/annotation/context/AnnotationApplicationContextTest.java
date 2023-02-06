@@ -2,17 +2,12 @@ package com.bobocode.svydovets.annotation.context;
 
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
-import com.bobocode.svydovets.beans.BarFormatter;
-import com.bobocode.svydovets.beans.Car;
-import com.bobocode.svydovets.beans.FooFormatter;
-import com.bobocode.svydovets.beans.FooService;
-import com.bobocode.svydovets.beans.MessageService;
-import com.bobocode.svydovets.beans.PrinterService;
+import com.bobocode.svydovets.beans.*;
 import com.bobocode.svydovets.beans.subpackage.SubpackageComponent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-@ExtendWith(MockitoExtension.class)
 class AnnotationApplicationContextTest {
 
     private static AnnotationApplicationContext applicationContext;
@@ -34,7 +28,7 @@ class AnnotationApplicationContextTest {
     public void shouldFindClassesAnnotatedWithComponentAnnotation() {
         var result = applicationContext.scan("com.bobocode.svydovets.beans");
         assertNotNull(result);
-        assertEquals(7, result.size());
+        assertEquals(11, result.size());
         assertTrue(result.contains(Car.class));
         assertTrue(result.contains(PrinterService.class));
         assertTrue(result.contains(MessageService.class));
@@ -112,5 +106,35 @@ class AnnotationApplicationContextTest {
     public void shouldThrowIfRegisterBeanFromAbstractClass() {
         assertThrows(BeanException.class,
                 () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.invalidbeans.abstractbean"));
+    }
+
+    @Test
+    public void verifySimpleValueAnnotationIsSet() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        var valueBean = applicationContext.getBean(SimpleValueBean.class);
+        assertNotNull(valueBean);
+        assertEquals("simpleAccountId", valueBean.accountId);
+    }
+
+    @Test
+    public void verifyValueAnnotationIsSet() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        var accountBean = applicationContext.getBean(Account.class);
+        assertNotNull(accountBean);
+        assertEquals("testValue", accountBean.accountId);
+    }
+    @Test
+    public void verifyLongValueAnnotationIsSet() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        var accountBean = applicationContext.getBean(AdminAccount.class);
+        assertNotNull(accountBean);
+        assertEquals(123L, accountBean.accountId);
+    }
+    @Test
+    public void verifyListValueAnnotationIsSet() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        var accountBean = applicationContext.getBean(SuperAdminAccount.class);
+        assertNotNull(accountBean);
+        assertEquals(List.of("User", "Admin", "SuperAdmin"), accountBean.roles);
     }
 }
