@@ -1,6 +1,6 @@
 package com.bobocode.svydovets.annotation.exception;
 
-public class PostConstructProcessingException extends RuntimeException {
+public class PostConstructProcessingException extends BeanException {
 
     public PostConstructProcessingException(String message) {
         super(message);
