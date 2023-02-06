@@ -1,9 +1,10 @@
 package com.bobocode.svydovets.autowiring;
 
 import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
-import com.bobocode.svydovets.autowiring.collection.SuccessCollectionService;
+import com.bobocode.svydovets.autowiring.collection.success.SuccessCollectionService;
 import com.bobocode.svydovets.autowiring.configuration.AutoSvydovetsClientBean;
 import com.bobocode.svydovets.autowiring.configuration.FooBarService;
 import com.bobocode.svydovets.autowiring.configuration.FooService;
@@ -171,9 +172,19 @@ class AnnotationApplicationContextTest {
         @Order(4)
         @DisplayName("Field injection with list of beans is successfully autowired")
         void autowiringListToFieldSetCorrectly() {
-            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.collection");
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.collection.success");
             SuccessCollectionService bean = applicationContext.getBean(SuccessCollectionService.class);
             assertEquals(1, bean.printBeanSize());
+        }
+
+        @Test
+        @Order(5)
+        @DisplayName("Exception is thrown if collection is raw used")
+        void autowiringListToFieldIfCollectionIsRawUsed() {
+            BeanException beanException = assertThrows(BeanException.class, () ->
+                    new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.collection.invalid"));
+            String message = beanException.getMessage();
+            assertEquals(message, "@AutoSvydovets collection List should not be raw used for field 'beans'");
         }
     }
 
