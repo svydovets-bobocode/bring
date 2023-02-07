@@ -10,7 +10,7 @@ public class MessageService implements CustomService {
 
     private String hello = "Hello";
 
-    public String sayMessage() {
+    public String getMessage() {
         return hello;
     }
 

@@ -54,7 +54,7 @@ public class AnnotationBeanFactoryTest {
     @Test
     void getBeanByTypeReturnsCorrectBean() {
         MessageService messageService = annotationBeanFactory.getBean(MessageService.class);
-        assertEquals("Hello", messageService.sayMessage());
+        assertEquals("Hello", messageService.getMessage());
     }
 
     @Test
@@ -70,13 +70,13 @@ public class AnnotationBeanFactoryTest {
     @Test
     void getBeanByByNameReturnsCorrectBean() {
         MessageService messageService = annotationBeanFactory.getBean("messageService", MessageService.class);
-        assertEquals("Hello", messageService.sayMessage());
+        assertEquals("Hello", messageService.getMessage());
     }
 
     @Test
     void getBeanByByNameAndSuperclassReturnsCorrectBean() {
         CustomService messageService = annotationBeanFactory.getBean("messageService", CustomService.class);
-        assertEquals("Hello", ((MessageService) messageService).sayMessage());
+        assertEquals("Hello", ((MessageService) messageService).getMessage());
     }
 
     @Test
