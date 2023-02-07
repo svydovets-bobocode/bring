@@ -47,7 +47,7 @@ class AnnotationApplicationContextTest {
         @Order(1)
         @DisplayName("Bean is correctly retrieved from the context by it`s type")
         void getBeanByTypeReturnsCorrectBean() {
-            SuccessMessageServiceImpl messageService = new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.success").getBean(SuccessMessageServiceImpl.class);
+            SuccessMessageServiceImpl messageService = applicationContext.getBean(SuccessMessageServiceImpl.class);
             assertEquals("Hello", messageService.getMessage());
         }
 
