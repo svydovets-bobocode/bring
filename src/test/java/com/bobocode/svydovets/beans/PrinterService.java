@@ -10,7 +10,7 @@ public class PrinterService implements CustomService {
     private MessageService messageService;
 
     public String print() {
-        return messageService.getMessage();
+        return messageService.sayMessage();
     }
 
 }

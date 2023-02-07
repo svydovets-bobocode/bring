@@ -1,12 +1,17 @@
 package com.bobocode.svydovets.beans;
 
 import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Scope;
+import com.bobocode.svydovets.annotation.register.BeanScope;
 
 @Component
+@Scope(BeanScope.PROTOTYPE)
 public class MessageService implements CustomService {
 
-    public String getMessage() {
-        return "Hello";
+    private String hello = "Hello";
+
+    public String sayMessage() {
+        return hello;
     }
 
 }
