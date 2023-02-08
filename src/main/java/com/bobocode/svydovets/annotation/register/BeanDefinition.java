@@ -10,7 +10,7 @@ public class BeanDefinition {
 
     private String beanName;
 
-    private String scope;
+    private BeanScope scope;
 
     private boolean isLazy;
 
