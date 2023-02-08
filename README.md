@@ -335,6 +335,37 @@ public class SecondaryAnnotationService {
 ```
 </details>
 
+Also, @Primary can be used with @Bean annotation on the method and class should be annotated as @Configuration
+
+<details>
+<summary>Example</summary> 
+
+```java
+@Configuration
+public class TestConfig {
+
+    @AutoSvydovets
+    private AutoSvydovetsDependency autoSvydovetsDependency;
+
+    @Bean
+    @Primary
+    public FooService fooSecondaryService() {
+        FooService fooService = new FooService();
+        fooService.setMessage("FooPrimary");
+        return fooService;
+    }
+
+    @Bean
+    public FooService fooService() {
+        FooService fooService = new FooService();
+        fooService.setMessage("Foo");
+        return fooService;
+    }
+}
+```
+
+</details>
+
 
 ### @BeanPostProcessor
 
