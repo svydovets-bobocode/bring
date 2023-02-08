@@ -1,5 +1,7 @@
 package com.bobocode.svydovets.annotation.bean.factory;
 
+import com.bobocode.svydovets.annotation.register.BeanDefinition;
+import com.bobocode.svydovets.annotation.register.BeanScope;
 import com.bobocode.svydovets.beans.Car;
 import com.bobocode.svydovets.beans.CustomService;
 import com.bobocode.svydovets.beans.MessageService;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,6 +28,7 @@ public class AnnotationBeanFactoryTest {
     @BeforeEach
     void setUp() {
         initContext(annotationBeanFactory.rootContextMap);
+        initBeanDefinition(annotationBeanFactory.beanDefinitionMap);
     }
 
     @Test
@@ -81,6 +85,13 @@ public class AnnotationBeanFactoryTest {
     }
 
     @Test
+    void getBeanAnnotatedWithPrototypeScope() {
+        CustomService firstBean = annotationBeanFactory.getBean("messageService", CustomService.class);
+        CustomService secondBean = annotationBeanFactory.getBean("messageService", CustomService.class);
+        assertFalse(firstBean == secondBean);
+    }
+
+    @Test
     void getAllBeansReturnsCorrectMap() {
         Map<String, CustomService> customServices = annotationBeanFactory.getAllBeans(CustomService.class);
 
@@ -99,5 +110,26 @@ public class AnnotationBeanFactoryTest {
         rootContextMap.put("car", new Car());
         rootContextMap.put("messageService", new MessageService());
         rootContextMap.put("printerService", new PrinterService());
+    }
+
+    private void initBeanDefinition(Map<String, BeanDefinition> beanDefinitionMap) {
+        beanDefinitionMap.put("car", BeanDefinition.builder()
+                .beanName("car")
+                .beanClass(Car.class)
+                .isPrimary(false)
+                .scope(BeanScope.SINGLETON)
+                .build());
+        beanDefinitionMap.put("messageService", BeanDefinition.builder()
+                .beanName("messageService")
+                .beanClass(MessageService.class)
+                .isPrimary(false)
+                .scope(BeanScope.PROTOTYPE)
+                .build());
+        beanDefinitionMap.put("printerService", BeanDefinition.builder()
+                .beanName("printerService")
+                .beanClass(PrinterService.class)
+                .isPrimary(false)
+                .scope(BeanScope.SINGLETON)
+                .build());
     }
 }
