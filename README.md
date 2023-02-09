@@ -41,8 +41,7 @@ Dependency injection is a pattern where the container passes objects by name to 
 - **[@Bean](#bean)**, **[@Component](#component)** - class that managed by IoC container ([@Component versus @Bean](#component-versus-bean))
 - **[@AutoSvydovets](#autoSvydovets)** - [field](#field-injection)/[constructor](#constructor-injection)/[setter](#setter-injection) injection
 - **[@Qualifier](#qualifier)** - specify a bean name
-
-[//]: # (- **[@Value]&#40;#value&#41;** - value from a properties file)
+- **[@Value](#value)** - injects value from property to bean
 - **[@Primary](#primary)** - make preferable for injection without specifying the bean name
 - **[BeanPostProcessor](#beanPostProcessor)** - 
 
@@ -335,6 +334,66 @@ public class SecondaryAnnotationService {
 ```
 </details>
 
+### @Value
+
+---
+**[@Value](#value)** allows to inject predefined values to bean.  
+In order it to work `application.properties` file needs to be put to `src/main/resources` folder
+properties should be split by `=` sign, like `key=value`  
+Property can be injected directly:
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.beans;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Value;
+
+@Component
+public class SimpleValueBean {
+    @Value("simpleAccountId")
+    public String accountId;
+}
+```
+</details>
+
+Another option is to predefine it in property file:
+
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.beans;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Value;
+
+@Component
+public class AdminAccount {
+    @Value("{accountIdNum}")
+    public Long accountId;
+}
+```
+</details>
+
+So far injections for 5 types supported:
+1. Integer
+2. Long
+3. Double
+4. String
+5. `List<String>` - comma separated values will be transformed into a list of strings.
+
+property file example:
+<details>
+<summary>Example</summary> 
+
+```properties
+accountId=testValue
+accountIdNum=123
+roles=User,Admin,SuperAdmin
+```
+</details>
 
 ### @BeanPostProcessor
 
