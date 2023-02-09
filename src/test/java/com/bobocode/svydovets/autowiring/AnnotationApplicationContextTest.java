@@ -211,7 +211,7 @@ class AnnotationApplicationContextTest {
             AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
             FooService bean = applicationContext.getBean(FooService.class);
             assertNotNull(bean);
-            assertEquals("Foo", bean.getMessage());
+            assertEquals("FooPrimary", bean.getMessage());
         }
 
         @Test
@@ -237,6 +237,16 @@ class AnnotationApplicationContextTest {
             //todo: throws NullPointerException in such case
             //String dependencyCallResult = autoSvydovetsClientBean.callAutoSvydovetsDependency();
             //assertEquals("AutoSvydovetsDependency", dependencyCallResult);
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("method marked as @Bean and @Primary should be injected when there are more then one bean with the same type")
+        void primaryWorksCorrectlyWhenThereAreTwoBeansWithTheSameType() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
+            FooService fooService = applicationContext.getBean(FooService.class);
+            assertNotNull(fooService);
+            assertEquals("FooPrimary", fooService.getMessage());
         }
 
     }

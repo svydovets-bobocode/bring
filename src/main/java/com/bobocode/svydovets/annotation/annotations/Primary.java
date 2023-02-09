@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
  * @see Qualifier
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Primary {
 }
