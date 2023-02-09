@@ -4,6 +4,7 @@ import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
 import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
+import com.bobocode.svydovets.autowiring.beanqualifier.success.SuccessBarServiceBeanQualifier;
 import com.bobocode.svydovets.autowiring.collection.success.SuccessCollectionService;
 import com.bobocode.svydovets.autowiring.configuration.AutoSvydovetsClientBean;
 import com.bobocode.svydovets.autowiring.configuration.FooBarService;
@@ -210,7 +211,7 @@ class AnnotationApplicationContextTest {
             AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
             FooService bean = applicationContext.getBean(FooService.class);
             assertNotNull(bean);
-            assertEquals("Foo", bean.getMessage());
+            assertEquals("FooPrimary", bean.getMessage());
         }
 
         @Test
@@ -238,6 +239,45 @@ class AnnotationApplicationContextTest {
             //assertEquals("AutoSvydovetsDependency", dependencyCallResult);
         }
 
+        @Test
+        @Order(3)
+        @DisplayName("method marked as @Bean and @Primary should be injected when there are more then one bean with the same type")
+        void primaryWorksCorrectlyWhenThereAreTwoBeansWithTheSameType() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
+            FooService fooService = applicationContext.getBean(FooService.class);
+            assertNotNull(fooService);
+            assertEquals("FooPrimary", fooService.getMessage());
+        }
+
     }
 
+    @Nested
+    @Order(4)
+    @DisplayName("4. Configuration beans qualifier")
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class ConfigurationBeansQualifierTest {
+
+        public static final String SUCCESS_CONFIGURATION_BEANQUALIFIER_PACKAGE = "com.bobocode.svydovets.autowiring.beanqualifier.success";
+        public static final String INVALID_CONFIGURATION_BEANQUALIFIER_PACKAGE = "com.bobocode.svydovets.autowiring.beanqualifier.invalid";
+
+        @Test
+        @Order(1)
+        @DisplayName("@Configuration marked class is successfully created as a beans with component @Qualifier")
+        void autowiringWithQualifierIsSetCorrectly() {
+            AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(SUCCESS_CONFIGURATION_BEANQUALIFIER_PACKAGE);
+            SuccessBarServiceBeanQualifier serviceBeanQualifier = applicationContext.getBean(SuccessBarServiceBeanQualifier.class);
+            assertNotNull(serviceBeanQualifier);
+            assertEquals("Foo1", serviceBeanQualifier.getMessage());
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("Failed context creation two beans without component @Qualifier")
+        void failedContextCreationWithTwoBeansWithoutComponentQualifier() {
+            NoUniqueBeanException noUniqueBeanException = assertThrows(NoUniqueBeanException.class,
+                    () -> new AnnotationApplicationContext(INVALID_CONFIGURATION_BEANQUALIFIER_PACKAGE));
+
+            assertThat(noUniqueBeanException.getMessage(), containsString("No qualifying bean of type [com.bobocode.svydovets.autowiring.beanqualifier.invalid.InvalidFooServiceBeanQualifier]: expected single matching bean but found 2: [fooService1, fooService2]"));
+        }
+    }
 }
