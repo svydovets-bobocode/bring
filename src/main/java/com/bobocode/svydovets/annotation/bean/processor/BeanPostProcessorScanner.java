@@ -6,6 +6,9 @@ import org.reflections.Reflections;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+/**
+ * Class uses for finding all implementations of {@link BeanPostProcessor}
+ */
 public class BeanPostProcessorScanner {
 
      /**

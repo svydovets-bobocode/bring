@@ -59,7 +59,6 @@ public class ValueProcessor implements BeanProcessor {
 
     @SuppressWarnings("java:S3011")
     private void setPropertiesToFields(Map<String, Object> rootContext, String beanName, Field[] fields) {
-        // Loop through each field in the bean
         for (Field field : fields) {
             Value valueAnnotation = field.getAnnotation(Value.class);
             if (valueAnnotation != null) {

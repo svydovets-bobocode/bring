@@ -15,6 +15,7 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
     }
 
 
+    @Override
     public void injectDependency(Object beanObject) {
         getAccessibleObjects(beanObject)
                 .forEach((key, value) -> {
@@ -23,6 +24,11 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
                 });
     }
 
+    /**
+     * @param accessibleObject
+     * @param injectType
+     * @return bean that will be used for injection in another bean
+     */
     protected Object getDependency(T accessibleObject, Class<?> injectType) {
         if (accessibleObject.isAnnotationPresent(Qualifier.class)) {
             String qualifierValue = accessibleObject.getAnnotation(Qualifier.class).value();
@@ -32,11 +38,26 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
         }
     }
 
+    /**
+     * Checks if {@link AutoSvydovets} annotation is present ot top of the object
+     * @param accessibleObject
+     * @return true or false
+     */
     protected boolean isAutoSvydovetsPresent(AccessibleObject accessibleObject) {
         return accessibleObject.isAnnotationPresent(AutoSvydovets.class);
     }
 
+    /**
+     * @param beanObject
+     * @return a Map of the class type and its declared fields that are annotated with @AutoSvydovets
+     */
     protected abstract Map<Class<?>, T> getAccessibleObjects(Object beanObject);
 
+    /**
+     * Overloaded method that provide final dependency injection based on {@link Injector} type
+     * @param accessibleObject
+     * @param beanObject
+     * @param dependencyParams
+     */
     protected abstract void injectDependency(T accessibleObject, Object beanObject, Object dependencyParams);
 }

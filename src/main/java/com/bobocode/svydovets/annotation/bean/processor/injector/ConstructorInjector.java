@@ -10,6 +10,10 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
+/**
+ * Injector's implementation for dependency injections in constructors
+ * marked {@link com.bobocode.svydovets.annotation.annotations.AutoSvydovets}
+ */
 public class ConstructorInjector extends AbstractInjector<Field> {
 
     public ConstructorInjector(BeanFactory beanFactory) {

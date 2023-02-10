@@ -177,11 +177,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <excludes>
-<!--                        <exclude>com/bobocode/svydovets/**/*.class</exclude>-->
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>

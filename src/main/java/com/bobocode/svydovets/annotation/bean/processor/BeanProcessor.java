@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public interface BeanProcessor {
 
+    /**
+     * Process each bean that rootContext contains
+     * @param rootContext
+     */
     void processBeans(Map<String, Object> rootContext);
 
 }

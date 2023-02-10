@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Injector's implementation for dependency injections in setter
+ * marked {@link com.bobocode.svydovets.annotation.annotations.AutoSvydovets}
+ */
 public class SetterInjector extends AbstractInjector<Method> {
 
     public SetterInjector(BeanFactory beanFactory) {

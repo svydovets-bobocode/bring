@@ -32,7 +32,6 @@ class AutoSvydovetsBeanProcessorTest {
     @SneakyThrows
     @BeforeEach
     public void setUp() {
-        // Initialize the mock
         MockitoAnnotations.openMocks(this).close();
 
         postProcessor = new AutoSvydovetsBeanProcessor(List.of(new FieldInjector(mockBeanFactory)));
@@ -41,20 +40,15 @@ class AutoSvydovetsBeanProcessorTest {
 
     @Test
     void testProcessBeansWithQualifier() {
-        // Create a mock dependency
         TestDependency mockDependency = new TestDependency();
 
-        // Configure the mock to return the mock dependency when getBean is called
         when(mockBeanFactory.getBean(eq("testDependency"), any(Class.class))).thenReturn(mockDependency);
 
-        // Add a test bean to the root context
         TestBeanWithQualifier testBean = new TestBeanWithQualifier();
         rootContext.put("testBean", testBean);
 
-        // Process the beans
         postProcessor.processBeans(rootContext);
 
-        // Assert that the dependency was injected into the test bean
         assertNotNull(testBean.getDependency());
         assertEquals("test", testBean.getDependency().getValue());
     }

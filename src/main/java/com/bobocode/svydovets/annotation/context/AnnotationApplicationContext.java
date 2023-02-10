@@ -112,7 +112,6 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         return beanClasses;
     }
 
-    //todo: add more tests for multiple packages
     private void validateScanArgument(String... packages) {
         if (packages == null) {
             throw new UnprocessableScanningBeanLocationException("Packages to scan argument can not be null");
@@ -215,8 +214,6 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
                 .beanName(beanName)
                 .isPrimary(isPrimary)
                 .scope(beanScope)
-//                .qualifier()
-//                .isLazy()
                 .build();
         beanDefinitionMap.put(beanName, beanDefinition);
     }
