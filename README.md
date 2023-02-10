@@ -57,7 +57,7 @@ This packages and all sub packages will be scanned and beans will be added to th
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.bring.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.autowiring.success.SuccessPrinterServiceImpl;
 
 public class Application {
@@ -80,9 +80,9 @@ To declare a bean create a method and mark it as **[@Bean](#bean)**.
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.annotations.Bean;
-import com.bobocode.svydovets.annotation.annotations.Configuration;
+import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+import com.bobocode.svydovets.bring.annotations.Bean;
+import com.bobocode.svydovets.bring.annotations.Configuration;
 
 @Configuration
 public class TestConfig {
@@ -133,9 +133,9 @@ The bean name can be provided via the annotation property `value`
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.annotations.Bean;
-import com.bobocode.svydovets.annotation.annotations.Configuration;
+
+import com.bobocode.svydovets.bring.annotations.Bean;
+import com.bobocode.svydovets.bring.annotations.Configuration;
 
 @Configuration
 public class TestConfig {
@@ -157,7 +157,7 @@ Is a class that managed by IoC container.
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Component;
 
 @Component
 public class AutoSvydovetsDependency {
@@ -173,7 +173,7 @@ The component name can be provided via the annotation property `value`
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Component;
 
 @Component("bean1")
 public class Service {
@@ -190,12 +190,12 @@ public class Service {
 
 > #### Field injection
 > 
->><details>
+>> <details>
 >><summary>Example</summary> 
 >>
 >>```java
->>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
->>import com.bobocode.svydovets.annotation.annotations.Component;
+>>import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.bring.annotations.Component;
 >>
 >>@Component("printer-bean")
 >>public class SuccessPrinterServiceImpl {
@@ -212,12 +212,12 @@ public class Service {
 
 > #### Constructor injection
 >
->><details>
+>> <details>
 >><summary>Example</summary> 
 >>
 >>```java
->>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
->>import com.bobocode.svydovets.annotation.annotations.Component;
+>>import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.bring.annotations.Component;
 >>
 >>@Component
 >>public class Service {
@@ -234,18 +234,18 @@ public class Service {
 >>}
 >>```
 >> For constructor injection, we necessarily need a default constructor.
->> When a `NoUniqueBeanException` occurs, use **[@Primary](#primary)** or **[@Qualifier](#qualifier)**.
+> > When a `NoUniqueBeanException` occurs, use **[@Primary](#primary)** or **[@Qualifier](#qualifier)**.
 >></details>
 
 > #### Setter injection
 >
->><details>
+>> <details>
 >><summary>Example</summary> 
 >>
 >>```java
->>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
->>import com.bobocode.svydovets.annotation.annotations.Component;
->>import com.bobocode.svydovets.annotation.annotations.Qualifier;
+>>import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.bring.annotations.Component;
+>>import com.bobocode.svydovets.bring.annotations.Qualifier;
 >>
 >>@Component("printer-bean")
 >>public class SetterSuccessPrinterServiceImpl {
@@ -271,12 +271,12 @@ If there are multiple implementations of interface, `@Qualifier` can be used wit
 
 > #### Field injection qualifier
 >
->><details>
+>> <details>
 >><summary>Example</summary> 
 >>
 >>```java
->>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
->>import com.bobocode.svydovets.annotation.annotations.Component;
+>>import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.bring.annotations.Component;
 >>
 >>@Component("printer-bean")
 >>public class SuccessPrinterServiceImpl {
@@ -289,13 +289,13 @@ If there are multiple implementations of interface, `@Qualifier` can be used wit
 
 > #### Setter injection qualifier
 >
->><details>
+>> <details>
 >><summary>Example</summary> 
 >>
 >>```java
->>import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
->>import com.bobocode.svydovets.annotation.annotations.Component;
->>import com.bobocode.svydovets.annotation.annotations.Qualifier;
+>>import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+>>import com.bobocode.svydovets.bring.annotations.Component;
+>>import com.bobocode.svydovets.bring.annotations.Qualifier;
 >>
 >>@Component("printer-bean")
 >>public class SetterSuccessPrinterServiceImpl {
@@ -323,8 +323,8 @@ Put on top of a **[@Component](#component)** class.
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Primary;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Primary;
 
 @Component
 @Primary
@@ -378,8 +378,8 @@ Property can be injected directly:
 ```java
 package com.bobocode.svydovets.beans;
 
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Value;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Value;
 
 @Component
 public class SimpleValueBean {
@@ -397,8 +397,8 @@ Another option is to predefine it in property file:
 ```java
 package com.bobocode.svydovets.beans;
 
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Value;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Value;
 
 @Component
 public class AdminAccount {
@@ -436,8 +436,8 @@ The BeanPostProcessor methods will apply to all beans.
 <summary>Example</summary> 
 
 ```java
-import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
-import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.bring.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.bring.exception.BeanException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

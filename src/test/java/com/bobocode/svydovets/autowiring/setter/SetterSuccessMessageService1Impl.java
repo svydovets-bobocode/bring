@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.autowiring.setter;
 
-import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+import com.bobocode.svydovets.bring.annotations.Component;
 
 @Component
 public class SetterSuccessMessageService1Impl implements SetterSuccessMessageService {

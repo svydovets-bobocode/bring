@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.bpp;
 
-import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
-import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.bring.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.bring.exception.BeanException;
 import com.bobocode.svydovets.bpp.success_change_field.BppComponent1WithFieldAnnotation;
 import com.bobocode.svydovets.bpp.success_change_field.BppComponent2WithoutFieldAnnotation;
 import org.junit.jupiter.api.*;

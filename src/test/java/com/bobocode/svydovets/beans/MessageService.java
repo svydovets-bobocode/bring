@@ -1,8 +1,8 @@
 package com.bobocode.svydovets.beans;
 
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Scope;
-import com.bobocode.svydovets.annotation.register.BeanScope;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Scope;
+import com.bobocode.svydovets.bring.register.BeanScope;
 
 @Component
 @Scope(BeanScope.PROTOTYPE)

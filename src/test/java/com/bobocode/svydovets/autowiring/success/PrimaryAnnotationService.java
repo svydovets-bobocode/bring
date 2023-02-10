@@ -1,8 +1,7 @@
 package com.bobocode.svydovets.autowiring.success;
 
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Primary;
-import com.bobocode.svydovets.autowiring.success.AnnotationService;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Primary;
 
 @Component
 @Primary

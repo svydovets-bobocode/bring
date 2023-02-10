@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.autowiring.beanqualifier.invalid;
 
-import com.bobocode.svydovets.annotation.annotations.Bean;
-import com.bobocode.svydovets.annotation.annotations.Configuration;
+import com.bobocode.svydovets.bring.annotations.Bean;
+import com.bobocode.svydovets.bring.annotations.Configuration;
 
 @Configuration
 public class InvalidConfigBeanQualifier {

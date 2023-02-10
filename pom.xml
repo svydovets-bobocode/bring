@@ -169,8 +169,8 @@
                                         </limit>
                                     </limits>
                                     <excludes>
-                                        <exclude>com.bobocode.svydovets.annotation.exception.**</exclude>
-                                        <exclude>com.bobocode.svydovets.annotation.register.**</exclude>
+                                        <exclude>com.bobocode.svydovets.bring.exception.**</exclude>
+                                        <exclude>com.bobocode.svydovets.bring.register.**</exclude>
                                     </excludes>
                                 </rule>
                             </rules>

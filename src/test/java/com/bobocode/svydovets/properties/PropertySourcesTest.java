@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.properties;
 
-import com.bobocode.svydovets.annotation.properties.PropertySource;
-import com.bobocode.svydovets.annotation.properties.PropertySources;
+import com.bobocode.svydovets.bring.properties.PropertySource;
+import com.bobocode.svydovets.bring.properties.PropertySources;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

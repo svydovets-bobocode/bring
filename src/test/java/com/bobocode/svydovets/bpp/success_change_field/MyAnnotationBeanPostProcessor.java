@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.bpp.success_change_field;
 
-import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
-import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.bring.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.bring.exception.BeanException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

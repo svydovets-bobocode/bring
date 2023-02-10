@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.autowiring.constructor.nofield;
 
-import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+import com.bobocode.svydovets.bring.annotations.Component;
 import com.bobocode.svydovets.autowiring.constructor.success.BarDependency;
 import com.bobocode.svydovets.autowiring.constructor.success.FooDependency;
 

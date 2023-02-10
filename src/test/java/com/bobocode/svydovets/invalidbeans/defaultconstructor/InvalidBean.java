@@ -1,6 +1,6 @@
 package com.bobocode.svydovets.invalidbeans.defaultconstructor;
 
-import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Component;
 
 @Component
 public class InvalidBean {

@@ -1,8 +1,8 @@
 package com.bobocode.svydovets.autowiring.beanqualifier.success;
 
-import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Qualifier;
+import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Qualifier;
 
 @Component
 public class SuccessBarServiceBeanQualifier {

@@ -1,6 +1,6 @@
 package com.bobocode.svydovets.autowiring.setter;
 
-import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.bring.context.AnnotationApplicationContext;
 import com.bobocode.svydovets.autowiring.setter.invalid.NonSetterMethod;
 import org.junit.jupiter.api.*;
 

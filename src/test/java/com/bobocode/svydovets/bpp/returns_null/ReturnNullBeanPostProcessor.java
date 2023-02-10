@@ -1,6 +1,6 @@
 package com.bobocode.svydovets.bpp.returns_null;
 
-import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.bring.bean.processor.BeanPostProcessor;
 
 public class ReturnNullBeanPostProcessor implements BeanPostProcessor {
     @Override

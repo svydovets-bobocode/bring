@@ -1,9 +1,8 @@
 package com.bobocode.svydovets.properties;
 
 
-import com.bobocode.svydovets.annotation.properties.PropertySource;
+import com.bobocode.svydovets.bring.properties.PropertySource;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

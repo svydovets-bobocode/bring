@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.beans;
 
-import com.bobocode.svydovets.annotation.annotations.Component;
-import com.bobocode.svydovets.annotation.annotations.Value;
+import com.bobocode.svydovets.bring.annotations.Component;
+import com.bobocode.svydovets.bring.annotations.Value;
 
 @Component
 public class AdminAccount {

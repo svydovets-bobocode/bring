@@ -1,7 +1,7 @@
 package com.bobocode.svydovets.autowiring.constructor;
 
-import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
-import com.bobocode.svydovets.annotation.exception.BeanException;
+import com.bobocode.svydovets.bring.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.bring.exception.BeanException;
 import com.bobocode.svydovets.autowiring.constructor.success.FooDependency;
 import com.bobocode.svydovets.autowiring.constructor.success.Service;
 import org.junit.jupiter.api.DisplayName;

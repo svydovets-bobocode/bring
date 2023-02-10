@@ -1,9 +1,9 @@
 package com.bobocode.svydovets.autowiring.configuration;
 
-import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
-import com.bobocode.svydovets.annotation.annotations.Bean;
-import com.bobocode.svydovets.annotation.annotations.Configuration;
-import com.bobocode.svydovets.annotation.annotations.Primary;
+import com.bobocode.svydovets.bring.annotations.AutoSvydovets;
+import com.bobocode.svydovets.bring.annotations.Bean;
+import com.bobocode.svydovets.bring.annotations.Configuration;
+import com.bobocode.svydovets.bring.annotations.Primary;
 
 @Configuration
 public class TestConfig {

@@ -1,9 +1,9 @@
 package com.bobocode.svydovets.autowiring;
 
-import com.bobocode.svydovets.annotation.context.AnnotationApplicationContext;
-import com.bobocode.svydovets.annotation.exception.BeanException;
-import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
-import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
+import com.bobocode.svydovets.bring.context.AnnotationApplicationContext;
+import com.bobocode.svydovets.bring.exception.BeanException;
+import com.bobocode.svydovets.bring.exception.NoSuchBeanException;
+import com.bobocode.svydovets.bring.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.autowiring.beanqualifier.success.SuccessBarServiceBeanQualifier;
 import com.bobocode.svydovets.autowiring.collection.success.SuccessCollectionService;
 import com.bobocode.svydovets.autowiring.configuration.AutoSvydovetsClientBean;
