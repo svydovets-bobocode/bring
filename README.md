@@ -32,6 +32,78 @@ Dependency injection is a pattern where the container passes objects by name to 
 </dependency>
 ```
 
+**What you need:**
+
+1. ```Java 17 or later```
+2. ```Maven 3.5+```
+
+An example of simple `Bring-Svydovets` application
+
+Create an `AnnotationApplicationContext` with root package as constructor param
+```
+public class BringDemo {
+    public static void main(String[] args) {
+        AnnotationApplicationContext applicationContext = new AnnotationApplicationContext("com.bobocode.bring");
+    }
+}
+```
+
+For adding beans into context use **[@Component](#component)** or **[@Bean](#bean)**
+
+**Please NOTE: default constructor is required**
+```
+public interface Printable {
+    void printHello();
+}
+```
+
+
+```
+public class DemoBean implements Printable {
+    @Override
+    public void printHello() {
+        System.out.println("Hello from DemoBean");
+    }
+}
+
+@Configuration()
+public class DemoConfiguration {
+    @Bean
+    public DemoBean getDemoBean() {
+        return new DemoBean();
+    }
+}
+```
+```
+@Component
+public class DemoComponent implements Printable {
+    @Override
+    public void printHello() {
+        System.out.println("Hello from DemoComponent");
+    }
+}
+```
+
+Now you can get the objects from AnnotationApplicationContext
+
+```
+public class BringDemo {
+    public static void main(String[] args) {
+        AnnotationApplicationContext applicationContext = new AnnotationApplicationContext("com.bobocode.bring");
+
+        Printable demoComponent = applicationContext.getBean(DemoComponent.class);
+        Printable demoBean = applicationContext.getBean(DemoBean.class);
+
+        demoComponent.printHello();
+        demoBean.printHello();
+    }
+}
+```
+For more options please see **Features**
+
+**Enjoy**
+
+****
 
 ## Features
 
@@ -43,6 +115,7 @@ Dependency injection is a pattern where the container passes objects by name to 
 - **[@Qualifier](#qualifier)** - specify a bean name
 - **[@Value](#value)** - injects value from property to bean
 - **[@Primary](#primary)** - make preferable for injection without specifying the bean name
+- **[@Scope](#scope)** - allow to set BeanScope value Singleton or Prototype
 - **[BeanPostProcessor](#beanPostProcessor)** - 
 
 
@@ -128,6 +201,8 @@ Is a class that managed by IoC container.
 Used inside annotated class with **[@Configuration](#configuration)**.
 By default, **bean name = method name**. 
 The bean name can be provided via the annotation property `value`
+
+The default bean **[Scope](#scope)** is `Singleton`
 
 <details>
 <summary>Example</summary> 
@@ -363,6 +438,124 @@ public class TestConfig {
 }
 ```
 
+</details>
+
+### @Value
+
+---
+**[@Value](#value)** allows to inject predefined values to bean.  
+In order it to work `application.properties` file needs to be put to `src/main/resources` folder
+properties should be split by `=` sign, like `key=value`  
+Property can be injected directly:
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.beans;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Value;
+
+@Component
+public class SimpleValueBean {
+    @Value("simpleAccountId")
+    public String accountId;
+}
+```
+</details>
+
+Another option is to predefine it in property file:
+
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.beans;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Value;
+
+@Component
+public class AdminAccount {
+    @Value("{accountIdNum}")
+    public Long accountId;
+}
+```
+</details>
+
+So far injections for 5 types supported:
+1. Integer
+2. Long
+3. Double
+4. String
+5. `List<String>` - comma separated values will be transformed into a list of strings.
+
+property file example:
+<details>
+<summary>Example</summary> 
+
+```properties
+accountId=testValue
+accountIdNum=123
+roles=User,Admin,SuperAdmin
+```
+</details>
+
+### @Scope
+
+---
+**[@Scope](#scope)** allow to specify `Singleton` or `Prototype` for bean definition.
+
+`Singleton` - returns single instance of class for every **[Bean](#bean)**
+
+`Prototype` - returns a new instance of class for every **[Bean](#bean)**
+
+The annotation could be specify on the class level if the class marked as **[@Component](#component)**:
+
+<details>
+<summary>Example</summary> 
+
+```java
+@Component
+@Scope(BeanScope.PROTOTYPE)
+public class MessageService implements CustomService {
+
+    private String hello = "Hello";
+
+    public String getMessage() {
+        return hello;
+    }
+
+}
+```
+</details>
+
+The annotation could be specify on the method level if the method marked as **[@Bean](#bean)**:
+
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.autowiring.configuration;
+
+import com.bobocode.svydovets.annotation.annotations.Bean;
+import com.bobocode.svydovets.annotation.annotations.Configuration;
+import com.bobocode.svydovets.annotation.annotations.Scope;
+import com.bobocode.svydovets.annotation.register.BeanScope;
+
+@Configuration
+public class TestConfig {
+
+    @Bean
+    @Scope(BeanScope.PROTOTYPE)
+    public FooService fooService() {
+        FooService fooService = new FooService();
+        fooService.setMessage("Foo");
+        return fooService;
+    }
+
+}
+```
 </details>
 
 ### @Value
