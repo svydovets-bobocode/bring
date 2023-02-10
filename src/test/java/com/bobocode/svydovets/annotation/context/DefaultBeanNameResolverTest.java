@@ -4,7 +4,6 @@ import com.bobocode.svydovets.annotation.annotations.Bean;
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Configuration;
 import com.bobocode.svydovets.annotation.exception.BeanException;
-
 import com.bobocode.svydovets.beans.FooService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,8 @@ import java.lang.reflect.Method;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DefaultBeanNameResolverTest {
 
@@ -25,33 +25,33 @@ public class DefaultBeanNameResolverTest {
     }
 
     @Test
-    public void resolveComponentExplicitName() {
+    void resolveComponentExplicitName() {
         String resolvedBeanName = beanNameResolver.resolveBeanName(ComponentMarkedExplicitName.class);
         String expectedName = ComponentMarkedExplicitName.class.getAnnotation(Component.class).value();
         assertEquals(expectedName, resolvedBeanName);
     }
 
     @Test
-    public void resolveComponentClassName() {
+    void resolveComponentClassName() {
         String resolvedBeanName = beanNameResolver.resolveBeanName(ComponentMarked.class);
         assertEquals("componentMarked", resolvedBeanName);
     }
 
     @Test
-    public void resolveConfigurationExplicitName() {
+    void resolveConfigurationExplicitName() {
         String resolvedBeanName = beanNameResolver.resolveBeanName(ConfigurationMarkedExplicitName.class);
         String expectedName = ConfigurationMarkedExplicitName.class.getAnnotation(Configuration.class).value();
         assertEquals(expectedName, resolvedBeanName);
     }
 
     @Test
-    public void resolveConfigurationClassName() {
+    void resolveConfigurationClassName() {
         String resolvedBeanName = beanNameResolver.resolveBeanName(ConfigurationMarked.class);
         assertEquals("configurationMarked", resolvedBeanName);
     }
 
     @Test
-    public void resolveNonBeanName() {
+    void resolveNonBeanName() {
         BeanException beanException =
                 assertThrows(BeanException.class, () -> beanNameResolver.resolveBeanName(NonBean.class));
 
@@ -60,7 +60,7 @@ public class DefaultBeanNameResolverTest {
     }
 
     @Test
-    public void resolveBeanMethodExplicitName() throws NoSuchMethodException {
+    void resolveBeanMethodExplicitName() throws NoSuchMethodException {
         Method fooServiceMethod = ConfigurationMarkedExplicitName.class.getMethod("fooService");
         String resolvedBeanName = beanNameResolver.resolveBeanName(fooServiceMethod);
         String expectedName = fooServiceMethod.getAnnotation(Bean.class).value();
@@ -68,7 +68,7 @@ public class DefaultBeanNameResolverTest {
     }
 
     @Test
-    public void resolveBeanMethodName() throws NoSuchMethodException {
+    void resolveBeanMethodName() throws NoSuchMethodException {
         Method fooServiceMethod = ConfigurationMarked.class.getMethod("fooService");
         String resolvedBeanName = beanNameResolver.resolveBeanName(fooServiceMethod);
         assertEquals("fooService", resolvedBeanName);

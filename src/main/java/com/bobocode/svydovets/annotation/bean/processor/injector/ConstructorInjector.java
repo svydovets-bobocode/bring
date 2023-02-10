@@ -2,7 +2,6 @@ package com.bobocode.svydovets.annotation.bean.processor.injector;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.exception.BeanException;
-import com.bobocode.svydovets.annotation.exception.FieldNotFoundException;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -26,19 +25,15 @@ public class ConstructorInjector extends AbstractInjector<Field> {
                 .ifPresent(constructor -> {
                     Class<?>[] parameterTypes = constructor.getParameterTypes();
                     for (int i = 0; i < constructor.getParameterCount(); i++) {
-                        try {
-                            Class<?> parameterType = parameterTypes[i];
-                            var field = retrieveFieldForParameterType(beanObject, parameterType);
-                            accessibleObjects.put(parameterType, field);
-                        } catch (NoSuchFieldException e) {
-                            throw new FieldNotFoundException(e.getMessage());
-                        }
+                        Class<?> parameterType = parameterTypes[i];
+                        var field = retrieveFieldForParameterType(beanObject, parameterType);
+                        accessibleObjects.put(parameterType, field);
                     }
                 });
         return accessibleObjects;
     }
 
-    private Field retrieveFieldForParameterType(Object beanObject, Class<?> parameterType) throws NoSuchFieldException {
+    private Field retrieveFieldForParameterType(Object beanObject, Class<?> parameterType) {
         return Arrays.stream(beanObject.getClass().getDeclaredFields())
                 .filter(field -> field.getType().isAssignableFrom(parameterType))
                 .findFirst()
@@ -47,6 +42,7 @@ public class ConstructorInjector extends AbstractInjector<Field> {
     }
 
     @Override
+    @SuppressWarnings("java:S3011")
     protected void injectDependency(Field field, Object beanObject, Object dependency) {
         try {
             field.setAccessible(true);

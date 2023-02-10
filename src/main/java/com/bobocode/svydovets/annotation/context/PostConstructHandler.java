@@ -37,6 +37,7 @@ public final class PostConstructHandler {
         }
     }
 
+    @SuppressWarnings("java:S3011")
     private static void invokeMethod(Method method, Object bean) {
         try {
             method.setAccessible(true);

@@ -10,10 +10,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class PropertySourcesTest {
+class PropertySourcesTest {
 
     @Test
-    public void addLastTest() {
+    void addLastTest() {
         PropertySources propertySources = new PropertySources();
         PropertySource<Map<String, Object>> propertySource1 = new SimplePropertySource("tst1");
         PropertySource<Map<String, Object>> propertySource2 = new SimplePropertySource("tst2");
@@ -28,7 +28,7 @@ public class PropertySourcesTest {
     }
 
     @Test
-    public void getTest() {
+    void getTest() {
         PropertySources propertySources = new PropertySources();
         PropertySource<Map<String, Object>> propertySource1 = new SimplePropertySource("test1");
         PropertySource<Map<String, Object>> propertySource2 = new SimplePropertySource("test2");

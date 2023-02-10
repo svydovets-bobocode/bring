@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LogoUtilsTest {
+class LogoUtilsTest {
 
     @Test
-    public void testGetBringLogo() {
+    void testGetBringLogo() {
         String expected = "\n\r,-----.        ,--.                         ,---.                      ,--.                        ,--.          \n" +
                 "|  |) /_,--.--.`--',--,--,  ,---.  ,-----. '   .-',--.  ,--.,--. ,--.,-|  | ,---.,--.  ,--.,---. ,-'  '-. ,---.  \n" +
                 "|  .-.  \\  .--',--.|      \\| .-. | '-----' `.  `-. \\  `'  /  \\  '  /' .-. || .-. |\\  `'  /| .-. :'-.  .-'(  .-'  \n" +

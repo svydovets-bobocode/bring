@@ -27,6 +27,7 @@ public class FieldInjector extends AbstractInjector<Field> {
     }
 
     @Override
+    @SuppressWarnings("java:S3011")
     protected void injectDependency(Field field, Object beanObject, Object dependency) {
         try {
             field.setAccessible(true);

@@ -1,35 +1,27 @@
 package com.bobocode.svydovets.annotation.qualifier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.injector.FieldInjector;
-import com.bobocode.svydovets.annotation.bean.processor.injector.Injector;
-import com.bobocode.svydovets.annotation.bean.processor.injector.SetterInjector;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.annotation.MatchesPattern;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class AutoSvydovetsBeanProcessorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
+class AutoSvydovetsBeanProcessorTest {
 
     @Mock
     private BeanFactory mockBeanFactory;
@@ -48,7 +40,7 @@ public class AutoSvydovetsBeanProcessorTest {
     }
 
     @Test
-    public void testProcessBeansWithQualifier() {
+    void testProcessBeansWithQualifier() {
         // Create a mock dependency
         TestDependency mockDependency = new TestDependency();
 

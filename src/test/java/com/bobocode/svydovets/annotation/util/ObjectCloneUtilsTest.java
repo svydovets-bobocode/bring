@@ -9,14 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import static com.bobocode.svydovets.annotation.exception.BeanException.CAN_NOT_CREATE_A_COPY_OF_BEAN;
 import static net.bytebuddy.matcher.ElementMatchers.any;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ObjectCloneUtilsTest {
+class ObjectCloneUtilsTest {
 
     private final ObjectMapper objectMapper = mock(ObjectMapper.class);
 
@@ -35,10 +34,8 @@ public class ObjectCloneUtilsTest {
     @Test
     void deepCopyThrowsBeanExceptionWhenInputIsInvalid() throws JsonProcessingException {
         doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(any());
-
-        BeanException exception = assertThrows(BeanException.class,
-                () -> ObjectCloneUtils.deepCopy(new Object(), Object.class));
-        assertEquals(CAN_NOT_CREATE_A_COPY_OF_BEAN, exception.getMessage());
+        Object objectCopy = new Object();
+        assertThrows(BeanException.class,
+                () -> ObjectCloneUtils.deepCopy(objectCopy, Object.class), CAN_NOT_CREATE_A_COPY_OF_BEAN);
     }
-
 }
