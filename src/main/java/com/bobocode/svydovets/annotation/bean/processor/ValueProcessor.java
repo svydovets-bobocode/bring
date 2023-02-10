@@ -2,22 +2,24 @@ package com.bobocode.svydovets.annotation.bean.processor;
 
 import com.bobocode.svydovets.annotation.annotations.Value;
 import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
+import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.properties.PropertySources;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Arrays;
 
 /**
  * The `ValueProcessor` class is a bean processor that processes the beans annotated with the `Value` annotation.
  * The class uses an instance of the {@link AnnotationBeanFactory} to retrieve the bean definitions and
  * an instance of the {@link PropertySources} to retrieve the property values.
- *
  */
+@Slf4j
 public class ValueProcessor implements BeanProcessor {
     private final AnnotationBeanFactory beanFactory;
     private final PropertySources propertySources;
@@ -50,23 +52,26 @@ public class ValueProcessor implements BeanProcessor {
 
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
+            Field[] fields = beanDefinition.getBeanClass().getDeclaredFields();
+            setPropertiesToFields(rootContext, beanName, fields);
+        }
+    }
 
-            try {
-                Field[] fields = beanDefinition.getBeanClass().getDeclaredFields();
-
-                // Loop through each field in the bean
-                for (Field field : fields) {
-                    Value valueAnnotation = field.getAnnotation(Value.class);
-                    if (valueAnnotation != null) {
-                        Object value = getPropertyValue(valueAnnotation.value(), field.getType());
-                        if (value != null) {
-                            field.setAccessible(true);
-                            field.set(rootContext.get(beanName), value);
-                        }
+    @SuppressWarnings("java:S3011")
+    private void setPropertiesToFields(Map<String, Object> rootContext, String beanName, Field[] fields) {
+        // Loop through each field in the bean
+        for (Field field : fields) {
+            Value valueAnnotation = field.getAnnotation(Value.class);
+            if (valueAnnotation != null) {
+                Object value = getPropertyValue(valueAnnotation.value(), field.getType());
+                if (value != null) {
+                    try {
+                        field.setAccessible(true);
+                        field.set(rootContext.get(beanName), value);
+                    } catch (IllegalAccessException e) {
+                        throw new BeanException(String.format("Can't set value to bean %s ", beanName));
                     }
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
             }
         }
     }

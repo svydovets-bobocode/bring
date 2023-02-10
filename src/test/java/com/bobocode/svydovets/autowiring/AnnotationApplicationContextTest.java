@@ -15,14 +15,25 @@ import com.bobocode.svydovets.autowiring.success.AnnotationService;
 import com.bobocode.svydovets.autowiring.success.SuccessCustomService;
 import com.bobocode.svydovets.autowiring.success.SuccessMessageServiceImpl;
 import com.bobocode.svydovets.autowiring.success.SuccessPrinterServiceImpl;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
@@ -122,6 +133,7 @@ class AnnotationApplicationContextTest {
             assertNotNull(primaryBean);
             assertEquals("PrimaryAnnotationService", primaryBean.getServiceName());
         }
+
         @Test
         @Order(10)
         @DisplayName("NoUniqueBeanException is thrown when Primary annotation is present on more then one candidate ")
@@ -185,7 +197,7 @@ class AnnotationApplicationContextTest {
             BeanException beanException = assertThrows(BeanException.class, () ->
                     new AnnotationApplicationContext("com.bobocode.svydovets.autowiring.collection.invalid"));
             String message = beanException.getMessage();
-            assertEquals(message, "@AutoSvydovets collection List should not be raw used for field 'beans'");
+            assertEquals("@AutoSvydovets collection List should not be raw used for field 'beans'", message);
         }
     }
 

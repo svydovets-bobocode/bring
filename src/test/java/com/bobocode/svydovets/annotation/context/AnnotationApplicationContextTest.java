@@ -2,7 +2,16 @@ package com.bobocode.svydovets.annotation.context;
 
 import com.bobocode.svydovets.annotation.exception.BeanException;
 import com.bobocode.svydovets.annotation.exception.UnprocessableScanningBeanLocationException;
-import com.bobocode.svydovets.beans.*;
+import com.bobocode.svydovets.beans.Account;
+import com.bobocode.svydovets.beans.AdminAccount;
+import com.bobocode.svydovets.beans.BarFormatter;
+import com.bobocode.svydovets.beans.Car;
+import com.bobocode.svydovets.beans.FooFormatter;
+import com.bobocode.svydovets.beans.FooService;
+import com.bobocode.svydovets.beans.MessageService;
+import com.bobocode.svydovets.beans.PrinterService;
+import com.bobocode.svydovets.beans.SimpleValueBean;
+import com.bobocode.svydovets.beans.SuperAdminAccount;
 import com.bobocode.svydovets.beans.subpackage.SubpackageComponent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,7 +34,7 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
-    public void shouldFindClassesAnnotatedWithComponentAnnotation() {
+    void shouldFindClassesAnnotatedWithComponentAnnotation() {
         var result = applicationContext.scan("com.bobocode.svydovets.beans");
         assertNotNull(result);
         assertEquals(11, result.size());
@@ -39,21 +48,21 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
-    public void shouldFindClassesAnnotatedWithComponentAnnotationInSubpackages() {
+    void shouldFindClassesAnnotatedWithComponentAnnotationInSubpackages() {
         var result = applicationContext.scan("com.bobocode.svydovets.beans");
         assertNotNull(result);
         assertTrue(result.contains(SubpackageComponent.class));
     }
 
     @Test
-    public void shouldNotFailIfProvidedPackageDoesNotExist() {
+    void shouldNotFailIfProvidedPackageDoesNotExist() {
         var result = applicationContext.scan("foo.bar");
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void shouldThrowIfPackagesArgumentIsNull() {
+    void shouldThrowIfPackagesArgumentIsNull() {
         String[] packages = null;
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
                 () -> applicationContext.scan(packages));
@@ -61,7 +70,7 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
-    public void shouldThrowIfItemInPackagesArgumentIsNull() {
+    void shouldThrowIfItemInPackagesArgumentIsNull() {
         String packageName = null;
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
                 () -> applicationContext.scan(packageName));
@@ -69,21 +78,21 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
-    public void shouldThrowIfItemInPackagesArgumentIsEmpty() {
+    void shouldThrowIfItemInPackagesArgumentIsEmpty() {
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
                 () -> applicationContext.scan(""));
         assertEquals("Package to scan argument can not be null or empty", thrown.getMessage());
     }
 
     @Test
-    public void shouldThrowIfItemInPackagesArgumentIsBlank() {
+    void shouldThrowIfItemInPackagesArgumentIsBlank() {
         UnprocessableScanningBeanLocationException thrown = assertThrows(UnprocessableScanningBeanLocationException.class,
                 () -> applicationContext.scan(" "));
         assertEquals("Package to scan argument can not be null or empty", thrown.getMessage());
     }
 
     @Test
-    public void shouldRegisterBeanSuccessfully() {
+    void shouldRegisterBeanSuccessfully() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var result = applicationContext.getBean(Car.class);
         assertNotNull(result);
@@ -91,25 +100,25 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
-    public void shouldThrowIfRegisterAlreadyExistingBean() {
+    void shouldThrowIfRegisterAlreadyExistingBean() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         assertThrows(BeanException.class, () -> applicationContext.register(Car.class));
     }
 
     @Test
-    public void shouldThrowIfRegisterBeanWithoutDefaultConstructor() {
+    void shouldThrowIfRegisterBeanWithoutDefaultConstructor() {
         assertThrows(BeanException.class,
                 () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.invalidbeans.defaultconstructor"));
     }
 
     @Test
-    public void shouldThrowIfRegisterBeanFromAbstractClass() {
+    void shouldThrowIfRegisterBeanFromAbstractClass() {
         assertThrows(BeanException.class,
                 () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.invalidbeans.abstractbean"));
     }
 
     @Test
-    public void verifySimpleValueAnnotationIsSet() {
+    void verifySimpleValueAnnotationIsSet() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var valueBean = applicationContext.getBean(SimpleValueBean.class);
         assertNotNull(valueBean);
@@ -117,21 +126,23 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
-    public void verifyValueAnnotationIsSet() {
+    void verifyValueAnnotationIsSet() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var accountBean = applicationContext.getBean(Account.class);
         assertNotNull(accountBean);
         assertEquals("testValue", accountBean.accountId);
     }
+
     @Test
-    public void verifyLongValueAnnotationIsSet() {
+    void verifyLongValueAnnotationIsSet() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var accountBean = applicationContext.getBean(AdminAccount.class);
         assertNotNull(accountBean);
         assertEquals(123L, accountBean.accountId);
     }
+
     @Test
-    public void verifyListValueAnnotationIsSet() {
+    void verifyListValueAnnotationIsSet() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var accountBean = applicationContext.getBean(SuperAdminAccount.class);
         assertNotNull(accountBean);

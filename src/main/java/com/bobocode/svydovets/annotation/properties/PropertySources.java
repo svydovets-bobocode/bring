@@ -5,14 +5,14 @@ import java.util.List;
 
 public class PropertySources {
 
-    private final List<PropertySource<?>> propertySources = new ArrayList<>();
+    private final List<PropertySource<?>> properties = new ArrayList<>();
 
     public void addLast(PropertySource<?> propertySource) {
-        propertySources.add(propertySource);
+        properties.add(propertySource);
     }
 
     public PropertySource<?> get(String name) {
-        for (PropertySource<?> propertySource : propertySources) {
+        for (PropertySource<?> propertySource : properties) {
             if (propertySource.getName().equals(name)) {
                 return propertySource;
             }
@@ -21,7 +21,7 @@ public class PropertySources {
     }
 
     public List<PropertySource<?>> getPropertySources() {
-        return propertySources;
+        return properties;
     }
 
 }

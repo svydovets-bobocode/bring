@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-//todo: integrate it with @Primary
-//todo: integrate it with @Qualifier
 /**
  * Used among with {@link Configuration} in order to create beans by method-based approach.
  *

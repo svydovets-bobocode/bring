@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 
 @DisplayName("PostConstruct test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PostConstructTest {
+class PostConstructTest {
 
     @Test
     @Order(1)

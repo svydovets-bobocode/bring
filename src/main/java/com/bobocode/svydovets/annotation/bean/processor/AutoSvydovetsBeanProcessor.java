@@ -32,12 +32,10 @@ public class AutoSvydovetsBeanProcessor implements BeanProcessor {
     @Override
     public void processBeans(Map<String, Object> rootContext) {
         rootContext.values()
-                .forEach(value -> {
-                            injectors.forEach(injector -> {
-                                        injector.injectDependency(value);
-                                    }
-                            );
-                        }
+                .forEach(
+                        value -> injectors.forEach(
+                                injector -> injector.injectDependency(value)
+                        )
                 );
     }
 

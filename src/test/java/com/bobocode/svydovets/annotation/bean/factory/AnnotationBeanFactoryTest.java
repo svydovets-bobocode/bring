@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-public class AnnotationBeanFactoryTest {
+class AnnotationBeanFactoryTest {
 
     private final AnnotationBeanFactory annotationBeanFactory = new AnnotationBeanFactory();
 
@@ -88,7 +88,7 @@ public class AnnotationBeanFactoryTest {
     void getBeanAnnotatedWithPrototypeScope() {
         CustomService firstBean = annotationBeanFactory.getBean("messageService", CustomService.class);
         CustomService secondBean = annotationBeanFactory.getBean("messageService", CustomService.class);
-        assertFalse(firstBean == secondBean);
+        assertNotSame(firstBean, secondBean);
     }
 
     @Test

@@ -5,11 +5,15 @@ import com.bobocode.svydovets.annotation.context.bean_with_same_name.Bean2;
 import com.bobocode.svydovets.annotation.context.no_default_constructor.BeanWithNoDefaultConstructor;
 import com.bobocode.svydovets.annotation.context.no_default_constructor_bpp.NoDefaultConstructorBeanPostProcessor;
 import com.bobocode.svydovets.annotation.exception.BeanException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
