@@ -659,9 +659,6 @@ public class BppComponent1WithFieldAnnotation {
 ```
 </details>
 
-<br/>
-<br/>
-<br/>
 
 ## Authors
 
