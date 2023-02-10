@@ -558,6 +558,66 @@ public class TestConfig {
 ```
 </details>
 
+### @Value
+
+---
+**[@Value](#value)** allows to inject predefined values to bean.  
+In order it to work `application.properties` file needs to be put to `src/main/resources` folder
+properties should be split by `=` sign, like `key=value`  
+Property can be injected directly:
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.beans;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Value;
+
+@Component
+public class SimpleValueBean {
+    @Value("simpleAccountId")
+    public String accountId;
+}
+```
+</details>
+
+Another option is to predefine it in property file:
+
+<details>
+<summary>Example</summary> 
+
+```java
+package com.bobocode.svydovets.beans;
+
+import com.bobocode.svydovets.annotation.annotations.Component;
+import com.bobocode.svydovets.annotation.annotations.Value;
+
+@Component
+public class AdminAccount {
+    @Value("{accountIdNum}")
+    public Long accountId;
+}
+```
+</details>
+
+So far injections for 5 types supported:
+1. Integer
+2. Long
+3. Double
+4. String
+5. `List<String>` - comma separated values will be transformed into a list of strings.
+
+property file example:
+<details>
+<summary>Example</summary> 
+
+```properties
+accountId=testValue
+accountIdNum=123
+roles=User,Admin,SuperAdmin
+```
+</details>
 
 ### @BeanPostProcessor
 
