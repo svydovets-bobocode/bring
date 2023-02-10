@@ -59,10 +59,7 @@ public interface Printable {
 
 
 ```
-public class DemoBean implements Printable{
-    public DemoBean() {
-    }
-
+public class DemoBean implements Printable {
     @Override
     public void printHello() {
         System.out.println("Hello from DemoBean");
@@ -79,10 +76,7 @@ public class DemoConfiguration {
 ```
 ```
 @Component
-public class DemoComponent implements Printable{
-    public DemoComponent() {
-    }
-
+public class DemoComponent implements Printable {
     @Override
     public void printHello() {
         System.out.println("Hello from DemoComponent");
