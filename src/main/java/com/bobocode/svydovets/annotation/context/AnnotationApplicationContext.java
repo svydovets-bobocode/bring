@@ -36,8 +36,8 @@ import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessorScanner
 import com.bobocode.svydovets.annotation.register.BeanScope;
 import com.bobocode.svydovets.annotation.util.LogoUtils;
 import com.bobocode.svydovets.annotation.util.ReflectionUtils;
+import com.bobocode.svydovets.annotation.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.bobocode.svydovets.annotation.exception.BeanException.BEAN_INSTANCE_MUST_NOT_BE_NULL;
 

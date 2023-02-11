@@ -3,7 +3,7 @@ package com.bobocode.svydovets.annotation.bean.processor;
 /**
  * Interface that allows custom initialization processing of all beans in the
  * provided context. Logic should be provider by implementing
- * {@link #postProcessAfterInitialization(Object, String)} & {@link #postProcessBeforeInitialization(Object, String)}.
+ * {@link #postProcessAfterInitialization(Object, String)} , {@link #postProcessBeforeInitialization(Object, String)}.
  */
 public interface BeanPostProcessor {
 

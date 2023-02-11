@@ -4,7 +4,7 @@ import com.bobocode.svydovets.annotation.annotations.Bean;
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Configuration;
 import com.bobocode.svydovets.annotation.exception.BeanException;
-import org.apache.commons.lang3.StringUtils;
+import com.bobocode.svydovets.annotation.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
