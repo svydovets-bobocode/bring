@@ -116,6 +116,7 @@ For more options please see **Features**
 - **[@Value](#value)** - injects value from property to bean
 - **[@Primary](#primary)** - make preferable for injection without specifying the bean name
 - **[@Scope](#scope)** - allow to set BeanScope value Singleton or Prototype
+- **[@PostConstruct](#postConstruct)** - allows to execute code after dependency injection before the class is put into service
 - **[BeanPostProcessor](#beanPostProcessor)** - hook that allows for custom modification of new bean instances
 
 
@@ -606,6 +607,38 @@ property file example:
 accountId=testValue
 accountIdNum=123
 roles=User,Admin,SuperAdmin
+```
+</details>
+
+### @PostConstruct
+
+---
+**[@PostConstruct](#postConstruct)** is used for methods only and allows to execute method(s) after dependency injection is done. Method(s) annotated with this annotation is invoked before the class is put into service.
+
+PostConstruct annotation can be applied for several methods, but in this case execution order is not guaranteed.
+
+The method can have any access modifier: public, protected, package private, or private.
+
+Requirements to method(s):
+1. Method can not have parameters.
+2. Method can not be static.
+3. Method should be inside the class annotated with Component or Configuration annotation.
+
+
+<details>
+<summary>Example</summary> 
+
+```java
+import com.bobocode.svydovets.annotation.annotations.PostConstruct;
+
+@Component
+public class MessageService {
+    
+    @PostConstruct
+    private void init() {
+        // some code here
+    }
+}
 ```
 </details>
 
