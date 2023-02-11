@@ -697,13 +697,3 @@ public class BppComponent1WithFieldAnnotation {
 }
 ```
 </details>
-
-
-## Authors
-
----
-### **Connect With US**
-- [Stanislav Kotyhrobov](https://github.com/rnyPlanet)
-<a rel="nofollow" href="https://www.linkedin.com/in/stanislav-grinin-6b6069152/"><img src="assets/linkedin.png" height="15" width="15"/></a>
-<a rel="nofollow" href="https://www.instagram.com/axelr0dd/"><img src="assets/instagram.png" height="15" width="15"/></a>
-- 
