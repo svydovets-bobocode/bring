@@ -5,7 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-//todo():integrate with post processor
 /**
  * Used to inject values from the .properties file.
  */

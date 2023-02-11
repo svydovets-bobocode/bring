@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
+/**
+ * Injector's implementation for dependency injections in fields
+ * marked {@link com.bobocode.svydovets.annotation.annotations.AutoSvydovets}
+ */
 public class FieldInjector extends AbstractInjector<Field> {
 
     public FieldInjector(BeanFactory beanFactory) {

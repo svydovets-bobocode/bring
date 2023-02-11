@@ -7,8 +7,18 @@ import java.lang.reflect.Method;
  */
 public interface BeanNameResolver {
 
+    /**
+     * Resolve bean name for provided class
+     * @param type
+     * @return Bean name
+     */
     String resolveBeanName(Class<?> type);
 
+    /**
+     * Resolve bean name for provided method
+     * @param method
+     * @return Bean name
+     */
     String resolveBeanName(Method method);
 
 }

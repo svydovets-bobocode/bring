@@ -245,10 +245,6 @@ class AnnotationApplicationContextTest {
             AnnotationApplicationContext applicationContext = new AnnotationApplicationContext(CONFIGURATION_PACKAGE);
             var autoSvydovetsClientBean = applicationContext.getBean(AutoSvydovetsClientBean.class);
             assertNotNull(autoSvydovetsClientBean);
-
-            //todo: throws NullPointerException in such case
-            //String dependencyCallResult = autoSvydovetsClientBean.callAutoSvydovetsDependency();
-            //assertEquals("AutoSvydovetsDependency", dependencyCallResult);
         }
 
         @Test

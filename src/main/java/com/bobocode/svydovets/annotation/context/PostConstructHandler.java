@@ -9,12 +9,28 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The PostConstructHandler class provides a process for handling the `PostConstruct` annotation.
+ *
+ * The class provides a static method `processPostConstruct` that takes an Object as an input and
+ * processes all the methods annotated with the `PostConstruct` annotation.
+ *
+ * The class ensures that the methods annotated with the `PostConstruct` annotation should be without
+ * parameters and not static.
+ *
+ * The class is a utility class and couldn't be initialised
+ */
 public final class PostConstructHandler {
 
     private PostConstructHandler() {
         throw new UnsupportedOperationException("This utility class and cannot be instantiated");
     }
 
+    /**
+     * Processes all the methods annotated with the `PostConstruct` annotation in the provided object
+     *
+     * @param bean the Object to process the `PostConstruct` annotated methods.
+     */
     static void processPostConstruct(Object bean) {
         List<Method> postConstructAnnotatedMethods =
                 Arrays.stream(bean.getClass().getDeclaredMethods())
