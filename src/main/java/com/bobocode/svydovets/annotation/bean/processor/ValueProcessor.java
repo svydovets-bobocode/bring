@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * The `ValueProcessor` class is a bean processor that processes the beans annotated with the `Value` annotation.
@@ -68,7 +69,8 @@ public class ValueProcessor implements BeanProcessor {
                         field.setAccessible(true);
                         field.set(rootContext.get(beanName), value);
                     } catch (IllegalAccessException e) {
-                        throw new BeanException(String.format("Can't set value to bean %s ", beanName));
+                        throw new BeanException(String.format("Can't set value to field %s in bean %s ",
+                                field.getName(), beanName));
                     }
                 }
             }
@@ -103,13 +105,24 @@ public class ValueProcessor implements BeanProcessor {
         if (clazz.isAssignableFrom(List.class)) {
             return clazz.cast(Arrays.asList(propValue.split(",")));
         }
+        return castAndCatch(propValue, clazz, value -> {
+        });
+    }
 
-        return switch (clazz.getSimpleName()) {
-            case "Long" -> clazz.cast(Long.valueOf(propValue));
-            case "Integer" -> clazz.cast(Integer.valueOf(propValue));
-            case "Double" -> clazz.cast(Double.valueOf(propValue));
-            default -> clazz.cast(propValue);
-        };
+    private <T> T castAndCatch(String propValue, Class<T> clazz, Consumer<T> consumer) {
+        try {
+            T value = switch (clazz.getSimpleName()) {
+                case "Long" -> clazz.cast(Long.valueOf(propValue));
+                case "Integer" -> clazz.cast(Integer.valueOf(propValue));
+                case "Double" -> clazz.cast(Double.valueOf(propValue));
+                default -> clazz.cast(propValue);
+            };
+            consumer.accept(value);
+            return value;
+        } catch (NumberFormatException e) {
+            throw new BeanException(String.format("Invalid value for type %s: %s",
+                    clazz.getSimpleName(), propValue), e);
+        }
     }
 
     private boolean propertyLoaded() {

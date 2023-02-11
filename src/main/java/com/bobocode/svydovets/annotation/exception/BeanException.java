@@ -16,6 +16,6 @@ public class BeanException extends RuntimeException {
 
     public BeanException(String message, Throwable cause) {
         super(message, cause);
-        log.error(message);
+        log.error(message, cause);
     }
 }

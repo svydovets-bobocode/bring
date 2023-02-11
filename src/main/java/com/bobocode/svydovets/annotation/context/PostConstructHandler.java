@@ -45,11 +45,16 @@ public final class PostConstructHandler {
     private static void checkPossibilityToProcess(List<Method> postConstructAnnotatedMethods) {
         if (postConstructAnnotatedMethods.stream().anyMatch(method -> method.getParameters().length > 0)) {
             throw new PostConstructProcessingException(
-                    "Method annotated with PostConstruct should be without parameters");
+                    String.format("Method: %s annotated with PostConstruct should be without parameters",
+                            postConstructAnnotatedMethods)
+            );
         }
 
         if (postConstructAnnotatedMethods.stream().anyMatch(method -> Modifier.isStatic(method.getModifiers()))) {
-            throw new PostConstructProcessingException("Method annotated with PostConstruct can not be static");
+            throw new PostConstructProcessingException(
+                    String.format("Method: %s annotated with PostConstruct can not be static",
+                            postConstructAnnotatedMethods)
+            );
         }
     }
 
