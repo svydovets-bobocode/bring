@@ -16,6 +16,8 @@ import org.mockito.Mockito;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
@@ -76,7 +78,8 @@ class PostConstructTest {
         PostConstructProcessingException exception = assertThrows(PostConstructProcessingException.class,
                 () -> new AnnotationApplicationContext("com.bobocode.svydovets.annotation.postconstruct.fail.withparams"));
 
-        assertThat(exception.getMessage(), containsString("Method annotated with PostConstruct should be without parameters"));
+        assertThat(exception.getMessage(), startsWith("Method: "));
+        assertThat(exception.getMessage(), endsWith("annotated with PostConstruct should be without parameters"));
     }
 
     @Test
@@ -86,7 +89,8 @@ class PostConstructTest {
         PostConstructProcessingException exception = assertThrows(PostConstructProcessingException.class,
                 () -> new AnnotationApplicationContext("com.bobocode.svydovets.annotation.postconstruct.fail.staticmethod"));
 
-        assertThat(exception.getMessage(), containsString("Method annotated with PostConstruct can not be static"));
+        assertThat(exception.getMessage(), startsWith("Method: "));
+        assertThat(exception.getMessage(), endsWith("annotated with PostConstruct can not be static"));
     }
 
     @Test
