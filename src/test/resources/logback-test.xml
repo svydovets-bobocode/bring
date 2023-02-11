@@ -1,15 +1,12 @@
 <configuration>
+    <property name="log.level" value="INFO" />
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight([%thread]) %green(%-5level) %cyan(%logger{36}) : %msg %ex{2}%nopex%n</pattern>
         </encoder>
     </appender>
-<!--    todo check confirm with team we need reflection logs here? And does it provide problems with custom logging-->
-    <logger name="com.bobocode.svydovets" level="info" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
-
-    <root level="error">
+    <logger name="org.reflections" level="ERROR"/>
+    <root level="${log.level}">
         <appender-ref ref="console"/>
     </root>
 </configuration>

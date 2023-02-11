@@ -50,10 +50,11 @@ public class ValueProcessor implements BeanProcessor {
             return;
         }
         Set<String> beanNames = beanFactory.getBeanDefinitionNames();
-
+        log.debug("Set properties to beans: {}", beanNames);
         for (String beanName : beanNames) {
             BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
             Field[] fields = beanDefinition.getBeanClass().getDeclaredFields();
+            log.trace("Set property values to fields in bean: {}", beanName);
             setPropertiesToFields(rootContext, beanName, fields);
         }
     }

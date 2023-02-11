@@ -11,19 +11,18 @@ import java.util.List;
 
 /**
  * The PostConstructHandler class provides a process for handling the `PostConstruct` annotation.
- *
+ * <p>
  * The class provides a static method `processPostConstruct` that takes an Object as an input and
  * processes all the methods annotated with the `PostConstruct` annotation.
- *
+ * <p>
  * The class ensures that the methods annotated with the `PostConstruct` annotation should be without
  * parameters and not static.
- *
+ * <p>
  * The class is a utility class and couldn't be initialised
  */
 public final class PostConstructHandler {
 
     private PostConstructHandler() {
-        throw new UnsupportedOperationException("This utility class and cannot be instantiated");
     }
 
     /**

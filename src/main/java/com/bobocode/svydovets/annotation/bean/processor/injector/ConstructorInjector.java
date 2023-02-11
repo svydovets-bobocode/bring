@@ -2,6 +2,7 @@ package com.bobocode.svydovets.annotation.bean.processor.injector;
 
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.exception.BeanException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -14,6 +15,7 @@ import static java.lang.String.format;
  * Injector's implementation for dependency injections in constructors
  * marked {@link com.bobocode.svydovets.annotation.annotations.AutoSvydovets}
  */
+@Slf4j
 public class ConstructorInjector extends AbstractInjector<Field> {
 
     public ConstructorInjector(BeanFactory beanFactory) {
@@ -22,6 +24,7 @@ public class ConstructorInjector extends AbstractInjector<Field> {
 
     @Override
     protected Map<Class<?>, Field> getAccessibleObjects(Object beanObject) {
+        log.trace("Constructor injection processing on bean {}", beanObject.getClass());
         Map<Class<?>, Field> accessibleObjects = new HashMap<>();
         Arrays.stream(beanObject.getClass().getConstructors())
                 .filter(this::isAutoSvydovetsPresent)

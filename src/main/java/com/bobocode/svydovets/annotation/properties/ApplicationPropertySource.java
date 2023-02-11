@@ -1,14 +1,12 @@
 package com.bobocode.svydovets.annotation.properties;
 
 import com.bobocode.svydovets.annotation.exception.BeanException;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Set;
 
-@Slf4j
 public class ApplicationPropertySource implements PropertySource<Properties> {
     private Properties properties = null;
     private final String name;
