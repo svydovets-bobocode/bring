@@ -116,7 +116,7 @@ For more options please see **Features**
 - **[@Value](#value)** - injects value from property to bean
 - **[@Primary](#primary)** - make preferable for injection without specifying the bean name
 - **[@Scope](#scope)** - allow to set BeanScope value Singleton or Prototype
-- **[BeanPostProcessor](#beanPostProcessor)** - 
+- **[BeanPostProcessor](#beanPostProcessor)** - hook that allows for custom modification of new bean instances
 
 
 ### Context
@@ -451,8 +451,6 @@ Property can be injected directly:
 <summary>Example</summary> 
 
 ```java
-package com.bobocode.svydovets.beans;
-
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Value;
 
@@ -470,8 +468,6 @@ Another option is to predefine it in property file:
 <summary>Example</summary> 
 
 ```java
-package com.bobocode.svydovets.beans;
-
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Value;
 
@@ -536,8 +532,6 @@ The annotation could be specify on the method level if the method marked as **[@
 <summary>Example</summary> 
 
 ```java
-package com.bobocode.svydovets.autowiring.configuration;
-
 import com.bobocode.svydovets.annotation.annotations.Bean;
 import com.bobocode.svydovets.annotation.annotations.Configuration;
 import com.bobocode.svydovets.annotation.annotations.Scope;
@@ -569,8 +563,6 @@ Property can be injected directly:
 <summary>Example</summary> 
 
 ```java
-package com.bobocode.svydovets.beans;
-
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Value;
 
@@ -588,8 +580,6 @@ Another option is to predefine it in property file:
 <summary>Example</summary> 
 
 ```java
-package com.bobocode.svydovets.beans;
-
 import com.bobocode.svydovets.annotation.annotations.Component;
 import com.bobocode.svydovets.annotation.annotations.Value;
 
