@@ -6,11 +6,12 @@ import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import com.bobocode.svydovets.annotation.register.BeanScope;
 import com.bobocode.svydovets.annotation.util.ObjectCloneUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.stream.Collectors.toMap;
@@ -21,6 +22,7 @@ import static java.util.stream.Collectors.toMap;
  * @see BeanFactory
  * @see AnnotationApplicationContext
  */
+@Slf4j
 public class AnnotationBeanFactory implements BeanFactory {
 
     protected final Map<String, Object> rootContextMap = new ConcurrentHashMap<>();
@@ -28,6 +30,7 @@ public class AnnotationBeanFactory implements BeanFactory {
 
     @Override
     public <T> T getBean(Class<T> beanType) {
+        log.trace("Getting bean of type: {}", beanType);
         Map<String, T> matchingBeans = getAllBeans(beanType);
         if (matchingBeans.size() > 1) {
             var bean = checkForPrimary(matchingBeans, beanType);
@@ -42,6 +45,37 @@ public class AnnotationBeanFactory implements BeanFactory {
         return matchingBeans.values().stream()
                 .findAny()
                 .orElseThrow(() -> new NoSuchBeanException(beanType.getName()));
+    }
+
+    @Override
+    public <T> T getBean(String beanName, Class<T> beanType) {
+        log.trace("Getting bean with name: {} and type: {}", beanName, beanType);
+        return Optional.ofNullable(getBeanForScope(beanName, rootContextMap.get(beanName)))
+                .map(beanType::cast)
+                .orElseThrow(() -> new NoSuchBeanException("No such bean with type " + beanType.getName()));
+    }
+
+    @Override
+    public <T> Map<String, T> getAllBeans(Class<T> beanType) {
+        log.trace("Getting beans by type {}", beanType.getName());
+        return rootContextMap.entrySet().stream()
+                .filter(entry -> beanType.isAssignableFrom(entry.getValue().getClass()))
+                .collect(toMap(Map.Entry::getKey, entry -> getBeanForScope(entry, beanType)));
+    }
+
+    @Override
+    public <T> List<T> getBeansByType(Class<T> beanType) {
+        return getAllBeans(beanType).values()
+                .stream().toList();
+    }
+
+    public BeanDefinition getBeanDefinition(String beanName) {
+        log.trace("Getting beanDefinition for bean: {}", beanName);
+        return beanDefinitionMap.get(beanName);
+    }
+
+    public Set<String> getBeanDefinitionNames() {
+        return beanDefinitionMap.keySet();
     }
 
     private <T> T checkForPrimary(Map<String, T> matchingBeans, Class<T> beanType) {
@@ -63,35 +97,7 @@ public class AnnotationBeanFactory implements BeanFactory {
         return result;
     }
 
-    @Override
-    public <T> T getBean(String beanName, Class<T> beanType) {
-        return Optional.ofNullable(getBeanForScope(beanName, rootContextMap.get(beanName)))
-                .map(beanType::cast)
-                .orElseThrow(() -> new NoSuchBeanException("No such bean with type " + beanType.getName()));
-    }
-
-    @Override
-    public <T> Map<String, T> getAllBeans(Class<T> beanType) {
-        return rootContextMap.entrySet().stream()
-                .filter(entry -> beanType.isAssignableFrom(entry.getValue().getClass()))
-                .collect(toMap(Map.Entry::getKey, entry -> getBeanForScope(entry, beanType)));
-    }
-
-    @Override
-    public <T> List<T> getBeansByType(Class<T> beanType) {
-        return getAllBeans(beanType).values()
-                .stream().toList();
-    }
-
-    public BeanDefinition getBeanDefinition(String beanName) {
-        return beanDefinitionMap.get(beanName);
-    }
-
-    public Set<String> getBeanDefinitionNames() {
-        return beanDefinitionMap.keySet();
-    }
-
-    private  <T> T getBeanForScope(Map.Entry<String, Object> entry, Class<T> beanType) {
+    private <T> T getBeanForScope(Map.Entry<String, Object> entry, Class<T> beanType) {
         var beanDefinition = beanDefinitionMap.get(entry.getKey());
         if (beanDefinition.getScope().equals(BeanScope.PROTOTYPE)) {
             return ObjectCloneUtils.deepCopy(

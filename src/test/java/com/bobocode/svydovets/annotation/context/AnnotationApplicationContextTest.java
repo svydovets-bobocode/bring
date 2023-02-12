@@ -142,10 +142,31 @@ class AnnotationApplicationContextTest {
     }
 
     @Test
+    void verifyIntegerValueAnnotationIsSet() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        var accountBean = applicationContext.getBean(AdminAccount.class);
+        assertNotNull(accountBean);
+        assertEquals(2023, accountBean.year);
+    }
+
+    @Test
+    void verifyDoubleValueAnnotationIsSet() {
+        applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
+        var accountBean = applicationContext.getBean(AdminAccount.class);
+        assertNotNull(accountBean);
+        assertEquals(9999.99, accountBean.adminSalary);
+    }
+
+    @Test
     void verifyListValueAnnotationIsSet() {
         applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.beans");
         var accountBean = applicationContext.getBean(SuperAdminAccount.class);
         assertNotNull(accountBean);
         assertEquals(List.of("User", "Admin", "SuperAdmin"), accountBean.roles);
+    }
+    @Test
+    void shouldThrowIfValueTypeIsNotCompatible() {
+        assertThrows(BeanException.class,
+                () -> applicationContext = new AnnotationApplicationContext("com.bobocode.svydovets.properties.invalidvalue"));
     }
 }

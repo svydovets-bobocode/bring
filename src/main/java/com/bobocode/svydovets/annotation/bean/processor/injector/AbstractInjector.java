@@ -3,10 +3,12 @@ package com.bobocode.svydovets.annotation.bean.processor.injector;
 import com.bobocode.svydovets.annotation.annotations.AutoSvydovets;
 import com.bobocode.svydovets.annotation.annotations.Qualifier;
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.AccessibleObject;
 import java.util.Map;
 
+@Slf4j
 public abstract class AbstractInjector<T extends AccessibleObject> implements Injector<T> {
     protected final BeanFactory beanFactory;
 
@@ -14,12 +16,13 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
         this.beanFactory = beanFactory;
     }
 
-
     @Override
     public void injectDependency(Object beanObject) {
         getAccessibleObjects(beanObject)
                 .forEach((key, value) -> {
+                    log.trace("Find dependency for injection to:{}", value);
                     Object dependency = getDependency(value, key);
+                    log.trace("Inject dependency: {} to bean: {}", dependency, beanObject);
                     injectDependency(value, beanObject, dependency);
                 });
     }
@@ -40,10 +43,12 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
 
     /**
      * Checks if {@link AutoSvydovets} annotation is present ot top of the object
+     *
      * @param accessibleObject
      * @return true or false
      */
     protected boolean isAutoSvydovetsPresent(AccessibleObject accessibleObject) {
+        log.trace("Check is annotation AutoSvydovets is present for: {}", accessibleObject);
         return accessibleObject.isAnnotationPresent(AutoSvydovets.class);
     }
 
@@ -55,6 +60,7 @@ public abstract class AbstractInjector<T extends AccessibleObject> implements In
 
     /**
      * Overloaded method that provide final dependency injection based on {@link Injector} type
+     *
      * @param accessibleObject
      * @param beanObject
      * @param dependencyParams

@@ -1,5 +1,7 @@
 package com.bobocode.svydovets.annotation.bean.factory;
 
+import com.bobocode.svydovets.annotation.exception.NoSuchBeanException;
+import com.bobocode.svydovets.annotation.exception.NoUniqueBeanException;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
 import com.bobocode.svydovets.annotation.register.BeanScope;
 import com.bobocode.svydovets.beans.Car;
@@ -59,12 +61,12 @@ class AnnotationBeanFactoryTest {
 
     @Test
     void getBeanByTypeWhenNoBeanPresentInContext() {
-        assertThrows(RuntimeException.class, () -> annotationBeanFactory.getBean(List.class));
+        assertThrows(NoSuchBeanException.class, () -> annotationBeanFactory.getBean(List.class));
     }
 
     @Test
     void getBeanByTypeWhenNoUniqueBeanPresentInContext() {
-        assertThrows(RuntimeException.class, () -> annotationBeanFactory.getBean(CustomService.class));
+        assertThrows(NoUniqueBeanException.class, () -> annotationBeanFactory.getBean(CustomService.class));
     }
 
     @Test

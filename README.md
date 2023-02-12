@@ -31,6 +31,11 @@ Dependency injection is a pattern where the container passes objects by name to 
    <version>1.0</version>
 </dependency>
 ```
+5. Tune logging level (INFO by default)
+```java
+Logger logger = (Logger) LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+logger.setLevel(Level.DEBUG);
+```
 
 **What you need:**
 
@@ -143,6 +148,7 @@ public class Application {
 ```
 </details>
 
+Also, you have possibility to add bean from another package using ``context.register(Object.class)`` method.
 
 ### @Configuration
 

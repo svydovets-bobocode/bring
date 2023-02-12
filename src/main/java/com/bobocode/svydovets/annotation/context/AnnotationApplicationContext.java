@@ -6,20 +6,10 @@ import com.bobocode.svydovets.annotation.annotations.Configuration;
 import com.bobocode.svydovets.annotation.annotations.Primary;
 import com.bobocode.svydovets.annotation.annotations.Scope;
 import com.bobocode.svydovets.annotation.bean.factory.AnnotationBeanFactory;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.util.Set;
-
 import com.bobocode.svydovets.annotation.bean.factory.BeanFactory;
 import com.bobocode.svydovets.annotation.bean.processor.AutoSvydovetsBeanProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessor;
+import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessorScanner;
 import com.bobocode.svydovets.annotation.bean.processor.BeanProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.ValueProcessor;
 import com.bobocode.svydovets.annotation.bean.processor.injector.ConstructorInjector;
@@ -32,12 +22,21 @@ import com.bobocode.svydovets.annotation.properties.ApplicationPropertySource;
 import com.bobocode.svydovets.annotation.properties.PropertySources;
 import com.bobocode.svydovets.annotation.register.AnnotationRegistry;
 import com.bobocode.svydovets.annotation.register.BeanDefinition;
-import com.bobocode.svydovets.annotation.bean.processor.BeanPostProcessorScanner;
 import com.bobocode.svydovets.annotation.register.BeanScope;
 import com.bobocode.svydovets.annotation.util.LogoUtils;
 import com.bobocode.svydovets.annotation.util.ReflectionUtils;
 import com.bobocode.svydovets.annotation.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.bobocode.svydovets.annotation.exception.BeanException.BEAN_INSTANCE_MUST_NOT_BE_NULL;
 
@@ -82,22 +81,10 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     private void initProcessors(String... packages) {
         initPropertySources();
         this.beanProcessors = List.of(new AutoSvydovetsBeanProcessor(injectors),
-                                      new ValueProcessor(this, propertySources));
+                new ValueProcessor(this, propertySources));
         log.debug("BeanProcessors successfully initialized: {}", beanProcessors);
         this.beanPostProcessors = new BeanPostProcessorScanner().scan(packages);
         log.debug("BeanPostProcessors successfully initialized: {}", beanPostProcessors);
-    }
-
-    private void initInjectors() {
-       injectors = List.of(new SetterInjector(this),
-               new FieldInjector(this),
-               new ConstructorInjector(this));
-    }
-
-    private void initPropertySources() {
-        propertySources = new PropertySources();
-        propertySources.addLast(new ApplicationPropertySource("application.properties"));
-
     }
 
     @Override
@@ -112,15 +99,6 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
         return beanClasses;
     }
 
-    private void validateScanArgument(String... packages) {
-        if (packages == null) {
-            throw new UnprocessableScanningBeanLocationException("Packages to scan argument can not be null");
-        }
-        if (Arrays.stream(packages).anyMatch(StringUtils::isBlank)) {
-            throw new UnprocessableScanningBeanLocationException("Package to scan argument can not be null or empty");
-        }
-    }
-
     @Override
     public void register(Class<?>... componentClasses) {
         for (Class<?> beanType : componentClasses) {
@@ -128,12 +106,41 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
             log.trace("Create bean instance {}", beanType.getName());
             Object bean = createInstance(constructor);
             String beanName = beanNameResolver.resolveBeanName(beanType);
-            log.trace("Process beans");
+            log.debug("Process bean [{}]", beanName);
             bean = processBean(bean, beanName);
             registerBean(beanName, bean);
             if (beanType.isAnnotationPresent(Configuration.class)) {
                 registerMethodBasedBeans(bean, beanType);
             }
+        }
+    }
+    private Object processBean(Object bean, String beanName) {
+        bean = postProcessesBeforeInitialization(bean, beanName);
+        if (bean != null) {
+            PostConstructHandler.processPostConstruct(bean);
+        }
+        bean = postProcessesAfterInitialization(bean, beanName);
+        return bean;
+    }
+
+    private void initInjectors() {
+        injectors = List.of(new SetterInjector(this),
+                new FieldInjector(this),
+                new ConstructorInjector(this));
+    }
+
+    private void initPropertySources() {
+        propertySources = new PropertySources();
+        propertySources.addLast(new ApplicationPropertySource("application.properties"));
+
+    }
+
+    private void validateScanArgument(String... packages) {
+        if (packages == null) {
+            throw new UnprocessableScanningBeanLocationException("Packages to scan argument can not be null");
+        }
+        if (Arrays.stream(packages).anyMatch(StringUtils::isBlank)) {
+            throw new UnprocessableScanningBeanLocationException("Package to scan argument can not be null or empty");
         }
     }
 
@@ -154,7 +161,7 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private Object postProcessesBeforeInitialization(Object bean, String beanName) {
-        log.trace("PostProcessesBeforeInitialization process");
+        log.trace("PostProcessesBeforeInitialization process on bean {}", beanName);
         for (BeanPostProcessor processor : this.beanPostProcessors) {
             bean = processor.postProcessBeforeInitialization(bean, beanName);
         }
@@ -162,32 +169,22 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private Object postProcessesAfterInitialization(Object bean, String beanName) {
-        log.trace("PostProcessesAfterInitialization process");
+        log.trace("PostProcessesAfterInitialization process on bean {}", beanName);
         for (BeanPostProcessor processor : this.beanPostProcessors) {
             bean = processor.postProcessAfterInitialization(bean, beanName);
         }
         return bean;
     }
 
-    private Object processBean(Object bean, String beanName) {
-        bean = postProcessesBeforeInitialization(bean, beanName);
-        if (bean != null) {
-            PostConstructHandler.processPostConstruct(bean);
-        }
-        bean = postProcessesAfterInitialization(bean, beanName);
-        return bean;
-    }
-
     private void registerBean(String beanName, Object bean) {
-        log.trace("Register bean {}", beanName);
+        if (bean == null) {
+            throw new BeanException(BEAN_INSTANCE_MUST_NOT_BE_NULL);
+        }
+        log.trace("Register bean: {} with name: {}", bean.getClass(), beanName);
         registerBean(beanName, bean, null);
     }
 
     private void registerBean(String beanName, Object bean, Method method) {
-        if (bean == null) {
-            throw new BeanException(BEAN_INSTANCE_MUST_NOT_BE_NULL);
-        }
-
         Object oldObject = rootContextMap.get(beanName);
         if (oldObject != null) {
             throw new BeanException(String.format(
@@ -205,7 +202,8 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private void fillBeanDefinition(String beanName, Class<?> beanType, Annotation[] annotations) {
-        log.trace("Fill BeanDefinitions");
+        log.trace("Fill BeanDefinitions for bean:{} with name:{}", beanType, beanName);
+
         boolean isPrimary = isPrimary(annotations);
         var beanScope = getBeanScope(beanType);
 
@@ -225,7 +223,6 @@ public class AnnotationApplicationContext extends AnnotationBeanFactory implemen
     }
 
     private static boolean isPrimary(Annotation[] annotations) {
-        log.trace("Check isPrimary");
         for (Annotation annotation : annotations) {
             if (annotation.annotationType().equals(Primary.class)) {
                 return true;
