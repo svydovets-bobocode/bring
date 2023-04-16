@@ -1,6 +1,6 @@
 ![img.png](assets/img.png)
 
-# bring-svydovets
+# Svydovets Bibernate
 
 Requirements for the project can be found [here](https://docs.google.com/document/d/1CRh6l8R28p8yIy7n0K7gu5yemXBemW9gFaFh9TaOavs/edit#).
 
